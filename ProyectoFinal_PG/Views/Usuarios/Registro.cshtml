@@ -1,0 +1,51 @@
+﻿@model DepartamentosCargosViewModel
+@{
+    ViewData["Title"] = "Registrarme";
+}
+
+<h1>Registro Municipal</h1>
+
+<form asp-action="Registro">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="DeptoId" class="form-label"></label>
+        <select asp-for="DeptoId" asp-items="@Model.Departamentos" class="form-select"></select>
+        <span asp-validation-for="DeptoId"></span>
+    </div>
+     <div class="mb-3">
+        <label asp-for="CargoId" class="form-label"></label>
+        <select asp-for="CargoId" asp-items="@Model.Cargos" class="form-select"></select>
+        <span asp-validation-for="CargoId"></span>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    @*<script src="~/js/CargadeSelects.js" asp-append-version="true"></script>*@
+    <script>
+
+const urlObtenerCargos = '@Url.Action("ObtenerCargosSelect")';
+$(function() {
+    $("#DeptoId").change(async function() {
+        const valorSeleccionado = $(this).val();
+        const respuesta = await fetch(urlObtenerCargos, {
+            method: 'POST',
+            body: valorSeleccionado,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const json = await respuesta.json();
+        console.log(json);
+        //const opciones = json.map(cargo => `<option value=${cargo.value}>
+        //${cargo.text}</option>`);
+        //$("#CargoId").html(opciones);
+    });
+});
+
+
+//$(function() {
+//    inicializarFormularioRegistro(urlObtenerCargos);
+//})
+    </script>
+}
