@@ -6,15 +6,25 @@
     <title>@ViewData["Title"] - ProyectoFinal_PG</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoFinal_PG.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 </head>
-<body style="margin:0">
-    <div style="display: flex; justify-content: center; align-items:center; height:100vh">
-        <div style="margin-right:5rem">
-            <h1>Portal de Gestión Municipal</h1>
-        <h4>Licencias, Permisos y Vacaciones</h4>
-    </div>
+ <header>
+     <div class="navbar">
+            <img src="~/imagenes/logo mvn.jpg" class="logo" alt="Main Logo">
+        
+            <h3>Municipalidad de Villa Nueva</h3>
+        <ul>
+            <li><a asp-action="Registro">Registrarme</a></li>
+            <li><a asp-action="Logueo">Ingresar</a></li>
+            
+        </ul>
+
+        </div>
+  </header>
+<body class="InicioRegistro" style="margin:0">
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

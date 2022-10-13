@@ -21,11 +21,11 @@ builder.Services.AddDbContext<BD_ControlVacacionalContext>(opc =>
 opc.UseNpgsql(builder.Configuration.GetConnectionString("devConnection")));
 builder.Services.AddTransient<IServiciosRegistroLogueo, ServiciosRegistroLogueo>();
 builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>();
-builder.Services.AddTransient<IUserStore<Usuario>, UsuarioStore>();
-builder.Services.AddTransient<SignInManager<Usuario>>();
-builder.Services.AddIdentityCore<Usuario>();
+builder.Services.AddTransient<IUserStore<TbEmpleados>, EmpleadoStore>();
+builder.Services.AddTransient<SignInManager<TbEmpleados>>();
+builder.Services.AddIdentityCore<TbEmpleados>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddIdentityCore<Usuario>(opc =>
+builder.Services.AddIdentityCore<TbEmpleados>(opc =>
 {
     opc.Password.RequireDigit = true;
     opc.Password.RequireLowercase = false;

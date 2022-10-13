@@ -9,7 +9,7 @@
             }
         });
         const json = await respuesta.json();
-        console.log(json);
+        
         const opciones = json.map(cargo => `<option value=${cargo.value}>
         ${cargo.text}</option>`);
         $("#CargoId").html(opciones);

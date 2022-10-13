@@ -9,11 +9,11 @@ namespace ProyectoFinal_PG.Controllers
 {
     public class UsuariosController: Controller
     {
-        private readonly UserManager<Usuario> userManager;
-        private readonly SignInManager<Usuario> signInManager;
+        private readonly UserManager<TbEmpleados> userManager;
+        private readonly SignInManager<TbEmpleados> signInManager;
         private readonly IServiciosRegistroLogueo serviciosRegistroLogueo;
 
-        public UsuariosController( UserManager<Usuario> userManager, SignInManager<Usuario> signInManager,
+        public UsuariosController( UserManager<TbEmpleados> userManager, SignInManager<TbEmpleados> signInManager,
             IServiciosRegistroLogueo serviciosRegistroLogueo)
         {
             this.userManager = userManager;
@@ -25,7 +25,7 @@ namespace ProyectoFinal_PG.Controllers
         {
             var modelo = new DepartamentosCargosViewModel();
             modelo.Departamentos = await ObtenerDepartamentos();
-            
+            modelo.Cargos = await ObtenerCargos(1);
             return View(modelo);
         }
         [AllowAnonymous]
@@ -39,18 +39,20 @@ namespace ProyectoFinal_PG.Controllers
             var departamentos = await serviciosRegistroLogueo.ObtenerDepartamentos();
             return departamentos.Select(x => new SelectListItem(x.DeptoNombre, x.DeptoId.ToString()));
         }
-        
-        private async Task<IEnumerable<SelectListItem>> ObtenerCargos(TbDepartamentosLaborales deptoId)
+        [AllowAnonymous]
+        private async Task<IEnumerable<SelectListItem>> ObtenerCargos(int deptoId)
         {
             var cargos = await serviciosRegistroLogueo.ObtenerCargos(deptoId);
             return cargos.Select(x => new SelectListItem(x.CargoNombre, x.CargoId.ToString()));
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> ObtenerCargosSelect([FromBody] TbDepartamentosLaborales deptoId)
+        public async Task<IActionResult> ObtenerCargosSelect([FromBody] int deptoId)
         {
             var cargos = await ObtenerCargos(deptoId);
             return Ok(cargos);
         }
+       
     }
 }

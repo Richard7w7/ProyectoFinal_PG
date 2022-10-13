@@ -5,7 +5,7 @@ namespace ProyectoFinal_PG.Servicios
 {
     public interface IServiciosRegistroLogueo
     {
-        Task<IEnumerable<TbCargos>> ObtenerCargos(TbDepartamentosLaborales deptoId);
+        Task<IEnumerable<TbCargos>> ObtenerCargos(int deptoId);
         Task<IEnumerable<TbDepartamentosLaborales>> ObtenerDepartamentos();
     }
     public class ServiciosRegistroLogueo: IServiciosRegistroLogueo
@@ -22,10 +22,10 @@ namespace ProyectoFinal_PG.Servicios
             return await bD_Control_Context.TbDepartamentosLaborales.ToListAsync();
         }
 
-        public async Task<IEnumerable<TbCargos>> ObtenerCargos(TbDepartamentosLaborales deptoId)
+        public async Task<IEnumerable<TbCargos>> ObtenerCargos(int deptoId)
         {
             
-            return await bD_Control_Context.TbCargos.Where(x => x.DeptoId == deptoId.DeptoId).ToListAsync();
+            return await bD_Control_Context.TbCargos.Where(x => x.DeptoId == deptoId).ToListAsync();
         }
     }
 }

@@ -1,6 +1,25 @@
-﻿
+﻿@model TbEmpleados
 @{
     ViewData["Title"] = "Ingresar";
 }
 
-<h1>Ingreso Municipal</h1>
+
+
+<main id="main-holder">
+    <h2 id="login-header">Ingresar</h2>
+    
+    <form asp-action="Logueo" id="login-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <input  asp-for="EmpleadoCodigo" class="login-form-field" placeholder="Codigo de Empleado">
+      <span asp-validation-for="EmpleadoCodigo" class="text-danger"></span>
+      <input  asp-for="EmpleadoContrasena" type="password" class="login-form-field" placeholder="Contraseña">
+      <span asp-validation-for="EmpleadoContrasena" class="text-danger"></span>
+      <button type="submit" id="login-form-submit">Ingresar</button>
+      <a asp-action="Registro" type="submit" id="login-form-submitRegistrar">Registrarme</a>
+    </form>
+  
+  </main>
+
+  @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+  }
