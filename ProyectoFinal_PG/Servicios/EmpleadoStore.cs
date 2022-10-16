@@ -6,8 +6,15 @@ namespace ProyectoFinal_PG.Servicios
     
     public class EmpleadoStore : IUserStore<TbEmpleados>, IUserPasswordStore<TbEmpleados>
     {
+        private readonly IServiciosRegistroLogueo serviciosrl;
+
+        public EmpleadoStore(IServiciosRegistroLogueo serviciosrl)
+        {
+            this.serviciosrl = serviciosrl;
+        }
         public async Task<IdentityResult> CreateAsync(TbEmpleados user, CancellationToken cancellationToken)
         {
+            user.EmpleadoId = await serviciosrl.CrearEmpleado(user);
             return IdentityResult.Success;
         }
 
@@ -21,14 +28,16 @@ namespace ProyectoFinal_PG.Servicios
             
         }
 
-        public async Task<TbEmpleados> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<TbEmpleados> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TbEmpleados> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<TbEmpleados> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            return await serviciosrl.BuscarPorCodigoEmpleado(normalizedUserName);
+            
         }
 
         public Task<string> GetNormalizedUserNameAsync(TbEmpleados user, CancellationToken cancellationToken)

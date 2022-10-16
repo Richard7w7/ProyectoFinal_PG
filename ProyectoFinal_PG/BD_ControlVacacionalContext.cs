@@ -277,6 +277,8 @@ namespace ProyectoFinal_PG
 
                 entity.Property(e => e.TiposolicitudId).HasColumnName("tiposolicitud_id");
 
+                entity.Property(e => e.solicitud_depto_Id).HasColumnName("solicitud_depto_Id");
+
                 entity.HasOne(d => d.Empleado)
                     .WithMany(p => p.TbSolicitudes)
                     .HasForeignKey(d => d.EmpleadoId)
@@ -292,7 +294,6 @@ namespace ProyectoFinal_PG
                 entity.HasOne(d => d.Periodo)
                     .WithMany(p => p.TbSolicitudes)
                     .HasForeignKey(d => d.PeriodoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_periodo_id_tb_solicitudes_tb_periodos");
 
                 entity.HasOne(d => d.Tiposolicitud)

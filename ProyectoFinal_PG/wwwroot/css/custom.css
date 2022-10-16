@@ -156,3 +156,12 @@
     text-align:center;
     text-decoration:none;
 }
+
+.containerRegistro{
+    margin: 2% 2% 2% 2%;
+    color:var(--blanco);
+}
+
+#conteneSolicitudPeriodoVacas{
+    display:none;
+}

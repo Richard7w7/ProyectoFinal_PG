@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,6 +30,34 @@ namespace ProyectoFinal_PG.Controllers
             return View(modelo);
         }
         [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Registro(DepartamentosCargosViewModel empleados)
+        {
+            if (!ModelState.IsValid) { return View(empleados); }
+            var empleado = new TbEmpleados { EmpleadoNombre1 = empleados.EmpleadoNombre1,
+            EmpleadoApellido1 = empleados.EmpleadoApellido1,
+            EmpleadoCodigo = empleados.EmpleadoCodigo,
+            CargoId = empleados.CargoId};
+            
+            var resultado = await userManager.
+            CreateAsync(empleados, password: empleados.EmpleadoContrasena);
+            if (resultado.Succeeded)
+            {
+               await signInManager.SignInAsync(empleado, isPersistent: true);
+               return RedirectToAction("Inicio", "Portal");
+                
+            }
+            else
+            {
+                foreach(var error in resultado.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(empleados);
+            }
+            
+        }
+        [AllowAnonymous]
         public IActionResult Logueo()
         {
             return View();
@@ -53,6 +82,37 @@ namespace ProyectoFinal_PG.Controllers
             var cargos = await ObtenerCargos(deptoId);
             return Ok(cargos);
         }
-       
+
+        public async Task<IActionResult> Cerrar_sesion()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Logueo", "Usuarios");
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Logueo(EmpleadoLogueo empleado)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(empleado);
+            }
+
+            
+
+            _ = new TbEmpleados();
+            TbEmpleados cargoEmpleado = await serviciosRegistroLogueo.BuscarPorCodigoEmpleado(empleado.EmpleadoCodigo);
+            var resultado = await signInManager.PasswordSignInAsync(empleado.EmpleadoCodigo,
+                empleado.EmpleadoContrasena, empleado.Recuerdame, lockoutOnFailure: false);
+            if (resultado.Succeeded)
+            {
+                        return RedirectToAction("Inicio", "Portal");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Nombre de usuario o password incorrecto");
+                return View(empleado);
+            }
+        }
     }
 }

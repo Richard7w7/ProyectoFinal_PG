@@ -1,0 +1,53 @@
+﻿@model TbSolicitudes
+@{
+    ViewData["Title"] = "Crear Solicitud";
+
+}
+
+<partial name="_Submenu" model="SubMenuSolicitudes.CrearSolicitud" />    
+
+<h1>Ingresa los datos para crear tu solicitud</h1>
+
+<div class="containerCrearSolicitud">
+    <form asp-action="CrearSolicitud">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label asp-for="TiposolicitudId" class="form-label"></label>
+                    <select asp-for="TiposolicitudId"
+                            asp-items="Html.GetEnumSelectList<TiposSolicitudesViewModel>()"
+                            class="form-select" onchange="MuestraPeriodo()">
+                    </select>
+                    <span asp-validation-for="TiposolicitudId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SolicitudDetalles" class="form-label"></label>
+                    <textarea asp-for="SolicitudDetalles" class="form-control"></textarea>
+                    <span asp-validation-for="SolicitudDetalles" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SolicitudFechasSeleccionadas" class="form-label"></label>
+                    <input type="text" asp-for="SolicitudFechasSeleccionadas" class="form-control" />
+                    <span asp-validation-for="SolicitudFechasSeleccionadas" class="text-danger"></span>
+                </div>
+                <div class="mb-3" id="conteneSolicitudPeriodoVacas">
+                    <label asp-for="SolicitudPeriodoVacas" class="form-label"></label>
+                    <input asp-for="SolicitudPeriodoVacas" class="form-control" />
+                    <span asp-validation-for="SolicitudPeriodoVacas" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mt-3">
+                <button class="btn btn-primary" type="submit">Crear Solicitud</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Funciones.js" asp-append-version="true"></script>
+    <script>
+    </script>
+}

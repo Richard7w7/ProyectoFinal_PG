@@ -2,71 +2,124 @@
 @{
     ViewData["Title"] = "Registrarme";
 }
+<div class="containerRegistro">
+    <h1 class="registroTitulo">Registro Municipal</h1>
 
-<h1 class="registroTitulo">Registro Municipal</h1>
 
+    <form asp-action="Registro">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-action="Registro">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="card registroCarta">
-        <div class="card-body">
-            <div class="mb-3">
-                <label asp-for="EmpleadoCodigo" class="form-label"></label>
-                 <input type="number" asp-for="EmpleadoCodigo" class="form-control"/>
-                <span asp-validation-for="EmpleadoCodigo" class="text-danger"></span>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoCodigo" class="form-label"></label>
+                    <input type="number" asp-for="EmpleadoCodigo" class="form-control" />
+                    <span asp-validation-for="EmpleadoCodigo" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="EmpleadoContrasena" class="form-label"></label>
-                <input type="password" asp-for="EmpleadoContrasena" class="form-control"/>
-                <span asp-validation-for="EmpleadoContrasena"></span>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoContrasena" class="form-label"></label>
+                    <input type="password" asp-for="EmpleadoContrasena" class="form-control" />
+                    <span asp-validation-for="EmpleadoContrasena" class="text-danger"></span>
+                </div>
             </div>
-             <div class="mb-3">
-                <label asp-for="DeptoId" class="form-label"></label>
-                <select asp-for="DeptoId" asp-items="@Model.Departamentos" class="form-select"></select>
-                <span asp-validation-for="DeptoId"></span>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="DeptoId" class="form-label"></label>
+                    <select asp-for="DeptoId" asp-items="@Model.Departamentos" class="form-select"></select>
+                    <span asp-validation-for="DeptoId" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="CargoId" class="form-label"></label>
-                <select asp-for="CargoId" asp-items="@Model.Cargos" class="form-select"></select>
-                <span asp-validation-for="CargoId"></span>
-            </div>
-            <h6 class="mb-3">Datos Personales</h6>
-            <div class="mb-3">
-                <label asp-for="EmpleadoNombre1" class="form-label"></label>
-                 <input type="text" asp-for="EmpleadoNombre1" class="form-control"/>
-                <span asp-validation-for="EmpleadoNombre1"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="EmpleadoNombre2" class="form-label"></label>
-                 <input type="text" asp-for="EmpleadoNombre2" class="form-control"/>
-                <span asp-validation-for="EmpleadoNombre2"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="EmpleadoApellido1" class="form-label"></label>
-                 <input type="text" asp-for="EmpleadoApellido1" class="form-control"/>
-                <span asp-validation-for="EmpleadoApellido1"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="EmpleadoApellido2" class="form-label"></label>
-                 <input type="text" asp-for="EmpleadoApellido2" class="form-control"/>
-                <span asp-validation-for="EmpleadoApellido2"></span>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="CargoId" class="form-label"></label>
+                    <select asp-for="CargoId" asp-items="@Model.Cargos" class="form-select"></select>
+                    <span asp-validation-for="CargoId" class="text-danger"></span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card registroCarta">
-        <div class="card-body">
-           
+        <hr />
+        <h6 class="mb-3">Datos Personales</h6>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoNombre1" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoNombre1" class="form-control" />
+                    <span asp-validation-for="EmpleadoNombre1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoNombre2" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoNombre2" class="form-control" />
+                    <span asp-validation-for="EmpleadoNombre2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoApellido1" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoApellido1" class="form-control" />
+                    <span asp-validation-for="EmpleadoApellido1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoApellido2" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoApellido2" class="form-control" />
+                    <span asp-validation-for="EmpleadoApellido2" class="text-danger"></span>
+                </div>
+            </div>
         </div>
-    </div>
-    <button class="btn btn-success">Registrarme</button>
-    <a class="btn btn-primary" asp-action="Logueo">Loguearme</a>
-</form>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoApellidoCasada" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoApellidoCasada" class="form-control" />
+                    <span asp-validation-for="EmpleadoApellidoCasada" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoFechaNacimiento" class="form-label"></label>
+                    <input asp-for="EmpleadoFechaNacimiento" class="form-control" />
+                    <span asp-validation-for="EmpleadoFechaNacimiento" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="FechaIngresoLaboral" class="form-label"></label>
+                    <input asp-for="FechaIngresoLaboral" class="form-control" />
+                    <span asp-validation-for="FechaIngresoLaboral" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoTelefono" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoTelefono" class="form-control" />
+                    <span asp-validation-for="EmpleadoTelefono" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="EmpleadoDireccion" class="form-label"></label>
+                    <input type="text" asp-for="EmpleadoDireccion" class="form-control" />
+                    <span asp-validation-for="EmpleadoDireccion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
 
+        <button class="btn btn-success">Registrarme</button>
+        <a class="btn btn-primary" asp-action="Logueo">Loguearme</a>
+    </form>
+</div>
 
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/CargadeSelects.js" asp-append-version="true"></script>
+    <script src="~/js/Funciones.js" asp-append-version="true"></script>
     <script>
         const urlObtenerCategorias = '@Url.Action("ObtenerCargosSelect")';
         $(function() {

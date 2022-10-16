@@ -1,0 +1,57 @@
+﻿@model empListadoSoli
+@{
+    ViewData["Title"] = "Listado de Solicitudes";
+}
+
+<h1 class="mb-3">Listado de Solicitudes</h1>
+
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <h4>Toma en cuenta lo siguiente:</h4>
+
+    <h6 class="mb-3"><strong>Jefe Inmediato:</strong> unicamente podra aprobar o denegar las solicitudes que le corresponda a el</h6>
+    <h6 class="mb-3"><strong>Director:</strong> unicamente podra aprobar o denegar las solicitudes que le corresponda a el</h6>
+    <h6 class="mb-3"><strong>Director Recursos Humanos:</strong> unicamente podra aprobar o denegar las solicitudes que le corresponda a el</h6>
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+@if (Model.SolicitudesViewModel.Count() ==0)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h4>No hay solicitudes que debas aprobar o denegar</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tipo de Solicitud</th>
+                <th>Código Empleado</th>
+                <th>Fecha de Solicitud</th>
+                <th>Detalles de la Solicitud</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var periodo in Model.SolicitudesViewModel)
+            {
+                <tr>
+                    <td>@periodo.Tiposolicitud.TiposolicitudNombre</td>
+                    <td>@periodo.Empleado.EmpleadoCodigo</td>
+                    <td>@periodo.SolicitudFecha</td>
+                    <td>@periodo.SolicitudDetalles</td>
+                    <td>
+                        <a asp-action="ModificarSolicitud" asp-route-id="@periodo.SolicitudId"
+                   class="btn btn-primary">Mostrar/Editar Solicitud</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<div class="mb-3 mt-3">
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+</div>
+

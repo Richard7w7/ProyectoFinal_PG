@@ -16,21 +16,31 @@ var politicaUsuariosAutenticados = new AuthorizationPolicyBuilder()
 builder.Services.AddControllersWithViews(opc =>
 {
     opc.Filters.Add(new AuthorizeFilter(politicaUsuariosAutenticados));
+    
 });
+//builder.Services.AddControllers()
+//.AddJsonOptions(opciones => opciones.JsonSerializerOptions.ReferenceHandler 
+//= System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<BD_ControlVacacionalContext>(opc => 
 opc.UseNpgsql(builder.Configuration.GetConnectionString("devConnection")));
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+//Inyeccion de nuestras Interfaces
+
 builder.Services.AddTransient<IServiciosRegistroLogueo, ServiciosRegistroLogueo>();
-builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>();
+builder.Services.AddTransient<IServicioEmpleados, ServicioEmpleados>();
+builder.Services.AddTransient<IServiciosSolicitudes, ServiciosSolicitudes>();
 builder.Services.AddTransient<IUserStore<TbEmpleados>, EmpleadoStore>();
 builder.Services.AddTransient<SignInManager<TbEmpleados>>();
+
 builder.Services.AddIdentityCore<TbEmpleados>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddIdentityCore<TbEmpleados>(opc =>
 {
-    opc.Password.RequireDigit = true;
+    opc.Password.RequireDigit = false;
     opc.Password.RequireLowercase = false;
     opc.Password.RequireUppercase = false;
-    opc.Password.RequireNonAlphanumeric = true;
+    opc.Password.RequireNonAlphanumeric = false;
 }).AddErrorDescriber<MensajesDeErrorIdentity>();
 builder.Services.AddAuthentication(opc =>
 {

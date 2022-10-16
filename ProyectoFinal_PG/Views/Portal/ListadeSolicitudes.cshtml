@@ -1,0 +1,40 @@
+﻿@model empListadoSoli
+@{
+    ViewData["Title"] = "Listado de Solicitudes";
+}
+<partial name="_Submenu" model="SubMenuSolicitudes.ListadodeSolicitudes" />    
+
+<h1>Listado de Solicitudes</h1>
+@if(Model.cargoNombre == "Director"||Model.cargoNombre == "Jefe Inmediato"
+||Model.cargoNombre == "Director RRHH")
+{
+    <a class="btn btn-primary" 
+    asp-action="ListarSolicitudesDepartamento">Ver Solicitudes del departamento</a>
+}
+<table class="table">
+        <thead>
+            <tr>
+                <th>Tipo de Solicitud</th>
+                <th>Fecha de solicitud</th>
+                <th>Detalles de la Solicitud</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var periodo in Model.SolicitudesViewModel)
+            {
+                <tr>
+                    <td>@periodo.Tiposolicitud.TiposolicitudNombre</td>
+                    <td>@periodo.SolicitudFecha</td>
+                    <td>@periodo.SolicitudDetalles</td>
+
+                    <td>
+                        <a asp-action="DetallesSolicitud" asp-route-id="@periodo.SolicitudId"
+                   class="btn btn-primary">ver Detalles</a>
+                        <a class="btn btn-success">Imprimir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+

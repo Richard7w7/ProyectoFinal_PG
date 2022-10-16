@@ -1,4 +1,4 @@
-﻿@model TbEmpleados
+﻿@model EmpleadoLogueo
 @{
     ViewData["Title"] = "Ingresar";
 }
@@ -14,6 +14,8 @@
       <span asp-validation-for="EmpleadoCodigo" class="text-danger"></span>
       <input  asp-for="EmpleadoContrasena" type="password" class="login-form-field" placeholder="Contraseña">
       <span asp-validation-for="EmpleadoContrasena" class="text-danger"></span>
+      <input class="form-check-input" type="checkbox" asp-for="Recuerdame" />
+      <label class="form-check-label" asp-for="Recuerdame">Recuerdame</label>
       <button type="submit" id="login-form-submit">Ingresar</button>
       <a asp-action="Registro" type="submit" id="login-form-submitRegistrar">Registrarme</a>
     </form>

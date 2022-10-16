@@ -1,0 +1,58 @@
+﻿@model EmpleadoSolicitudesViewModel
+@{
+    ViewData["Title"] = "Detalles Solicitud";
+}
+<partial name="_Submenu" model="SubMenuSolicitudes.DetallesSolicitud" />
+<h1>Detalles Solicitud</h1>
+@if (Model is null)
+{
+    <label class="text-danger">No hay solicitud para mostrar,
+        Ve al apartado de lista de solicitudes y selecciona la que desees ver
+    </label>
+
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.SolicitudFecha" class="form-label"></label>
+                    <input type="datetime" asp-for="SolicitudesViewModelDetalle.SolicitudFecha" class="form-control" disabled />
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.SolicitudDetalles" class="form-label"></label>
+                    <input asp-for="SolicitudesViewModelDetalle.SolicitudDetalles" class="form-control" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.SolicitudFechasSeleccionadas" class="form-label"></label>
+                    <textarea asp-for="SolicitudesViewModelDetalle.SolicitudFechasSeleccionadas" class="form-control" disabled></textarea>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.SolicitudCantidadDias" class="form-label"></label>
+                    <input asp-for="SolicitudesViewModelDetalle.SolicitudCantidadDias" class="form-control" disabled />
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.SolicitudComentario" class="form-label"></label>
+                    <input asp-for="SolicitudesViewModelDetalle.SolicitudComentario" class="form-control" disabled />
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label asp-for="SolicitudesViewModelDetalle.Estadosolicitud.EstadosNombre" class="form-label"></label>
+                    <input asp-for="SolicitudesViewModelDetalle.Estadosolicitud.EstadosNombre" class="form-control" disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+}

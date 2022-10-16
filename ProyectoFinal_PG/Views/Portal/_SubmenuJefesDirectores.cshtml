@@ -1,0 +1,33 @@
+﻿@model SubMenuSolicitudes
+
+<ul class="nav nav-pills nav-fill mb-3">
+     <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.InicioMenu? "active":null)"
+        asp-action="Inicio">Inicio</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.CrearSolicitud ? "active":null)"
+        asp-action="CrearSolicitud">Crear Solicitud</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.DetallesSolicitud ? "active":null)"
+        asp-action="DetallesSolicitud">Detalles de la Solicitud</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.ListadodeSolicitudes ? "active":null)"
+        asp-action="ListadeSolicitudes">Listado de Solicitudes</a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.PeriodosVacacionales ? "active":null)"
+        asp-action="PeriodosVacacionales">Periodos Vacacionales</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.ListadodeSolicitudes ? "active":null)"
+        asp-action="ListadeSolicitudes">Listado de Solicitudes</a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link @(Model == SubMenuSolicitudes.EditarSolicitudEmpleado ? "active":null)"
+        asp-action="ListadeSolicitudes">Listado de Solicitudes</a>
+    </li>
+
+</ul>

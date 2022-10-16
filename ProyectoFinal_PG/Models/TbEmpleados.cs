@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoFinal_PG.Models
 {
@@ -40,7 +41,10 @@ namespace ProyectoFinal_PG.Models
         public string? EmpleadoApellidoCasada { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Fecha de Nacimiento")]
-        public DateOnly EmpleadoFechaNacimiento { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EmpleadoFechaNacimiento { get; set; }
+
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Telefono Celular")]
         public string EmpleadoTelefono { get; set; }
@@ -49,10 +53,20 @@ namespace ProyectoFinal_PG.Models
         public string EmpleadoDireccion { get; set; }
         public int EmpleadoEstadoVacional { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        [Display(Name = "Primer Nombre")]
-        public DateOnly FechaIngresoLaboral { get; set; }
+        [Display(Name = "Fecha Ingreso Laboral")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaIngresoLaboral { get; set; }
+        [NotMapped]
         public virtual bool Recuerdame { get; set; }
-
+        [NotMapped]
+        public string Periodo { get; set; }
+        [NotMapped]
+        public int cantidad_dias { get; set; }
+        [NotMapped]
+        public int periodo_id { get; set; }
+        [NotMapped]
+        public string cargoNombre { get; set; }
         public virtual TbCargos Cargo { get; set; }
         public virtual TbDepartamentosLaborales Depto { get; set; }
         public virtual ICollection<TbPeriodos> TbPeriodos { get; set; }

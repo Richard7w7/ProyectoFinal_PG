@@ -1,0 +1,31 @@
+﻿@model EmpleadoPeriodoViewModel
+@{
+    ViewData["Title"] = "Periodos de Vacaciones";
+}
+
+<partial name="_Submenu" model="SubMenuSolicitudes.PeriodosVacacionales" />    
+
+
+
+<h1>Detalles de los Periodos Vacacionales</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Periodo Vacacional</th>
+            <th>Cantidad de Dias</th>
+            <th>Observaciones</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var periodo in Model.TbPeriodosView)
+        {
+            <tr>
+                <td>@periodo.PeriodoVacacional</td>
+                <td>@periodo.PeriodoCantidadDiasPeriodo</td>
+                <td>@periodo.PeriodoObservaciones</td>
+            </tr>
+        }
+    </tbody>
+</table>

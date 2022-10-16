@@ -1,0 +1,77 @@
+﻿@model EmpleadoSolicitudesViewModel
+@{
+    ViewData["Title"] = "Editar Solicitud";
+}
+
+<h1>Detalles de la solicitud a modificar</h1>
+@if (Model is null)
+{
+    <label class="text-danger">
+        No hay solicitud para mostrar,
+        Ve al apartado de lista de solicitudes y selecciona la que desees ver
+    </label>
+
+}
+else
+{
+    <form asp-action="ModificarSolicitud">
+        <div class="container">
+            <input type="text" hidden asp-for="SolicitudesViewModelDetalle.SolicitudId">
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.SolicitudFecha" class="form-label"></label>
+                        <input type="datetime" asp-for="SolicitudesViewModelDetalle.SolicitudFecha" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.SolicitudDetalles" class="form-label"></label>
+                        <input asp-for="SolicitudesViewModelDetalle.SolicitudDetalles" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.SolicitudFechasSeleccionadas" class="form-label"></label>
+                        <textarea asp-for="SolicitudesViewModelDetalle.SolicitudFechasSeleccionadas" class="form-control" disabled></textarea>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.SolicitudCantidadDias" class="form-label"></label>
+                        <input asp-for="SolicitudesViewModelDetalle.SolicitudCantidadDias" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.SolicitudComentario" class="form-label"></label>
+                        <input asp-for="SolicitudesViewModelDetalle.SolicitudComentario" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.Estadosolicitud.EstadosNombre" class="form-label"></label>
+                        <input asp-for="SolicitudesViewModelDetalle.Estadosolicitud.EstadosNombre" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label asp-for="SolicitudesViewModelDetalle.EstadosolicitudId" class="form-label">Por favor apruebe o deniegue la solicitud</label>
+                        <select asp-for="SolicitudesViewModelDetalle.EstadosolicitudId" asp-items="@Model.TbEstadosolicitudesView" class="form-select"></select>
+                        <span asp-validation-for="SolicitudesViewModelDetalle.EstadosolicitudId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-success">Aprobar/Denegar Solicitud</button>
+        </div>
+    </form>
+    <div class="mb-3">
+        <a asp-action="ListarSolicitudesDepartamento" class="btn btn-dark">Regresar al listado de solicitudes del departamento</a>
+    </div>
+}
+
+
