@@ -10,10 +10,15 @@
 function MuestraPeriodo() {
     var tipoSolicitud = document.getElementById("TiposolicitudId");
     var SolicitudPeriodoVacas = document.getElementById("conteneSolicitudPeriodoVacas");
+    var SolicitudPeriodo = document.getElementById("SolicitudPeriodoVacas");
+    var periodo = document.getElementById("viewBagPeriodo");
+    console.log(periodo.value);
     if (tipoSolicitud.value == 3) {
-        SolicitudPeriodoVacas.style.display = "block";
+
+        SolicitudPeriodo.value = periodo.value;
     } else {
-        SolicitudPeriodoVacas.style.display = "none";
+
+        SolicitudPeriodo.value = null;
     }
 }
 
@@ -35,5 +40,36 @@ function inicializarFormularioRegistro(urlObtenerCargos) {
 })
 }
 
+$(function () {
+    var opcion = document.getElementById("viewBagLimiteDias").value;
+    switch (opcion) {
+        case 'limite':
+            Swal.fire({
+
+                title: "Limite de días alcanzado",
+                text: "la cantidad de días seleccionados supera a la cantidad de días disponibles",
+                icon: "warning",
+            });
+            break;
+        case 'creada':
+            Swal.fire({
+                title: "Listo",
+                text: "tu solicitud ha sido creada",
+                icon: "success",
+            });
+            break;
+        default:
+            break;
+    }
+
+    if (opcion == 'limite') {
+        Swal.fire({
+
+            title: "Limite de días alcanzado",
+            text: "la cantidad de días seleccionados supera a la cantidad de días disponibles",
+            icon: "warning",
+        });
+    }
+});
 
 

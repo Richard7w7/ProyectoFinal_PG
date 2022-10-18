@@ -24,6 +24,7 @@ namespace ProyectoFinal_PG.Models
         [Display(Name = "Fechas Seleccionadas")]
         public string SolicitudFechasSeleccionadas { get; set; }
         public int SolicitudCantidadDias { get; set; }
+        [Display(Name = "Periodo del cual se tomaran los días a vacacionar")]
         public string SolicitudPeriodoVacas { get; set; }
         public string SolicitudComentario { get; set; }
         public string SolicitudEstadoSeleJefe { get; set; }

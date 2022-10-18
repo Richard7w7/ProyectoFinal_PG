@@ -11,6 +11,15 @@
     <a class="btn btn-primary" 
     asp-action="ListarSolicitudesDepartamento">Ver Solicitudes del departamento</a>
 }
+<div class="mb-3 mt-3">
+    <a asp-action="ListadeSolicitudes" class="btn btn-primary">Filtrar por solicitudes enviadas</a>
+</div>
+<div class="mb-3 mt-3">
+    <a asp-action="FiltrarporAprobado" class="btn btn-success">Filtrar por solicitudes aprobadas</a>
+</div>
+<div class="mb-3 mt-3">
+    <a asp-action="FiltrarporDenegado" class="btn btn-danger">Filtrar por solicitudes denegadas</a>
+</div>
 <table class="table">
         <thead>
             <tr>
@@ -38,3 +47,6 @@
         </tbody>
     </table>
 
+<div class="mb-3 mt-3">
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+</div>

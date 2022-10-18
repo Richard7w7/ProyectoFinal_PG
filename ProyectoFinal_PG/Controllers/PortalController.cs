@@ -81,6 +81,28 @@ namespace ProyectoFinal_PG.Controllers
             return View(modelo);
         }
         [HttpGet]
+        public async Task<IActionResult> FiltrarporAprobado()
+        {
+            var modelo = new empListadoSoli();
+            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+            var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+            int id = (int)empleado.EmpleadoId;
+            modelo.SolicitudesViewModel = await serviciosSolicitudes.ListadoSolicitudesEmpleadoAprobadas(id);
+            modelo.cargoNombre = empleado.Cargo.CargoNombre;
+            return View("ListadeSolicitudes", modelo);
+        }
+        [HttpGet]
+        public async Task<IActionResult> FiltrarporDenegado()
+        {
+            var modelo = new empListadoSoli();
+            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+            var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+            int id = (int)empleado.EmpleadoId;
+            modelo.SolicitudesViewModel = await serviciosSolicitudes.ListadoSolicitudesEmpleadoDenegadas(id);
+            modelo.cargoNombre = empleado.Cargo.CargoNombre;
+            return View("ListadeSolicitudes",modelo);
+        }
+        [HttpGet]
         public async Task<IActionResult> PeriodosVacacionales()
         {
             var modelo = new EmpleadoPeriodoViewModel();
@@ -98,27 +120,52 @@ namespace ProyectoFinal_PG.Controllers
         public async Task<ActionResult> CrearSolicitud()
         {
             var empleadomodel = new TbEmpleados();
-
             var empleadoId = servicioEmpleados.ObtenerEmpleadoId();
             var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
             int idemp = (int)empleado.EmpleadoId;
+            var haysoli = await serviciosSolicitudes.BuscarsolicitudesconEstadoEnviado(idemp);
             empleadomodel = await serviciosSolicitudes.ObtenerPeriodosPorId(idemp);
+            ViewBag.Periodo = empleadomodel.Periodo;
+            ViewBag.Dias = empleadomodel.cantidad_dias;
+            ViewBag.Idemp = haysoli;
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CrearSolicitud(TbSolicitudes modelo)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(modelo);
-            }
             var empleadoId = servicioEmpleados.ObtenerEmpleadoId();
             var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+            var cantidadDiasVacacionales = await serviciosSolicitudes
+                .ObtenerPeriodosPorId((int)empleado.EmpleadoId);
+            string[] cantidadDias = modelo.SolicitudFechasSeleccionadas.Split(',');
+            ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+            int dias = cantidadDias.Length;
+            int diaslimites = (int)ViewBag.Dias;
+            if ( dias > diaslimites)
+            {
+                
+                   
+                ViewBag.Periodo = cantidadDiasVacacionales.Periodo;
+                ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+                ViewBag.Solicitud = "limite";
+                return View();
+            }
+            if (!ModelState.IsValid)
+            {
+                
+                ViewBag.Periodo = cantidadDiasVacacionales.Periodo;
+                ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+                return View();
+            }
+            
             modelo.solicitud_depto_Id = empleado.DeptoId;
             var id = await serviciosSolicitudes.CrearSolicitud(modelo);
+            ViewBag.Periodo = cantidadDiasVacacionales.Periodo;
+            ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+            ViewBag.Solicitud = "creada";
             
-            return View();
+            return RedirectToAction("ListadeSolicitudes");
 
         }
 
