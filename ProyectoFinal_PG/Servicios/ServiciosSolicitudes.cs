@@ -7,16 +7,22 @@ namespace ProyectoFinal_PG.Servicios
 {
     public interface IServiciosSolicitudes
     {
+        Task<bool> ActualizarDatos(ActualizaDatos actualizaDatos, int empleadoId);
         Task<TbEmpleados> BuscarEmpleadoporCodigo(int codigoemp);
         Task<TbEmpleados> BuscarEmpleadoporID(int codigoemp);
         Task<List<TbPeriodos>> BuscarPeriodosPorId(int codigoemp);
         Task<bool> BuscarsolicitudesconEstadoEnviado(int codigoemp);
         Task<int> CrearSolicitud(TbSolicitudes modelo);
         Task<TbSolicitudes> DetalleSolicitudDepartamento(int id, TbEmpleados empleado);
+        Task<bool> InsertarCargos(AgregarCargosViewModel agregarCargos);
+        Task<bool> InsertarCodigo(AgregarCodigosdeEmpleado agregarCodigosdeEmpleado);
+        Task<bool> InsertarDepartamento(AgregarDepartamentos agregarDepartamentos);
+        Task<bool> InsertarPeriodo(AgregarPeriodosViewModel agregarPeriodos);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesDepartamento(int deptoId,TbEmpleados empleado);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoAprobadas(int empleadoId);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoDenegadas(int empleadoId);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoId(int empleadoId);
+        Task<IEnumerable<TbSolicitudes>> ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar();
         Task<bool> ModificarEstadoSolicitud(TbSolicitudes solicitud);
         Task<IEnumerable<TbEstadosolicitudes>> ObtenerEstadosSolicitudes(TbEmpleados empleado);
         Task<IEnumerable<TbPeriodos>> ObtenerPeriodosEmpleadoId(int empleadoId);
@@ -42,6 +48,7 @@ namespace ProyectoFinal_PG.Servicios
             var empleado = new TbEmpleados();
             empleado = await db_context.TbEmpleados
                 .Include(t => t.Cargo)
+                .Include(t => t.Depto)
                 .Where(emp => emp.EmpleadoCodigo == codigoemp.ToString()).FirstOrDefaultAsync();
             return empleado;
         }
@@ -117,7 +124,7 @@ namespace ProyectoFinal_PG.Servicios
 
                     empleado.Periodo = periodos[i].PeriodoVacacional;
                     empleado.cantidad_dias = periodos[i].PeriodoCantidadDiasPeriodo;
-                    empleado.periodo_id= periodos[i].PeriodoId;
+                    empleado.periodo_id= (int)periodos[i].PeriodoId;
 
                 }
             }
@@ -255,6 +262,7 @@ namespace ProyectoFinal_PG.Servicios
                     .Include(t => t.Tiposolicitud)
                     .Include(t => t.Estadosolicitud)
                     .Where(t => t.EstadosolicitudId == (int)enumEstados.aproboDirector)
+                    .Where(t => t.solicitud_depto_Id == (int)enumDepartamentos.RecursosHumanos)
                     .ToListAsync();
 
                     return solicitudes;
@@ -272,6 +280,18 @@ namespace ProyectoFinal_PG.Servicios
 
         }
 
+        public async Task<IEnumerable<TbSolicitudes>> 
+            ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar()
+        {
+            var solicitudes = await db_context.TbSolicitudes
+                  .Include(t => t.Empleado)
+                  .Include(t => t.Tiposolicitud)
+                  .Include(t => t.Estadosolicitud)
+                  .Where(t => t.EstadosolicitudId == (int)enumEstados.aproboDirector)
+                  .ToListAsync();
+
+            return solicitudes;
+        }
         public async Task<TbSolicitudes> DetalleSolicitudDepartamento(int id, TbEmpleados empleado)
         {
             var solicitud = new TbSolicitudes();
@@ -371,7 +391,21 @@ namespace ProyectoFinal_PG.Servicios
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if (solicitud.EstadosolicitudId == (int)enumEstados.aproboDirectorRRHH)
                     {
-                        soli.SolicitudEstadoRrHh = "Aprobada";
+                        if(soli.SolicitudPeriodoVacas == null)
+                        {
+                            soli.SolicitudEstadoRrHh = "Aprobada";
+                            await db_context.SaveChangesAsync();
+                            return true;
+                        }
+                        else
+                        {
+                            soli.SolicitudEstadoRrHh = "Aprobada";
+                            var periodo = await ObtenerPeriodoPorId((int)soli.PeriodoId);
+                            periodo.PeriodoCantidadDiasPeriodo -= soli.SolicitudCantidadDias;
+                            await db_context.SaveChangesAsync();
+                            return true;
+                        }
+
                     }
                     else if (solicitud.EstadosolicitudId == (int)enumEstados.DenegoDirectorRRHH)
                     {
@@ -382,6 +416,103 @@ namespace ProyectoFinal_PG.Servicios
                 default:
                     return false;
 
+            }
+        }
+
+        public async Task<TbPeriodos> ObtenerPeriodoPorId(int id)
+        {
+            var periodo = await db_context.TbPeriodos.Where(p => p.PeriodoId == id).FirstOrDefaultAsync();
+            return periodo;
+        }
+
+        public async Task<bool> ActualizarDatos(ActualizaDatos actualizaDatos,int empleadoId)
+        {
+
+            var empleado = await BuscarEmpleadoporCodigo(empleadoId);
+            if(actualizaDatos.EmpleadoTelefono != null)
+            {
+                empleado.EmpleadoTelefono = actualizaDatos.EmpleadoTelefono;
+            }
+            if(actualizaDatos.EmpleadoDireccion!= null)
+            {
+                empleado.EmpleadoDireccion = actualizaDatos.EmpleadoDireccion;
+            }
+            
+            await db_context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> InsertarDepartamento(AgregarDepartamentos agregarDepartamentos)
+        {
+            var depa = new TbDepartamentosLaborales();
+            
+            if(agregarDepartamentos != null)
+            {
+                depa.DeptoNombre = agregarDepartamentos.Departamento;
+                depa.DeptoDescripcion = agregarDepartamentos.Descripcion;
+                db_context.Add(depa);
+                await db_context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> InsertarCodigo(AgregarCodigosdeEmpleado agregarCodigosdeEmpleado)
+        {
+            var codigo = new TbCodigosempleadosmunicipales();
+
+            if (agregarCodigosdeEmpleado != null)
+            {
+                codigo.Codigoempleadomunicipal = agregarCodigosdeEmpleado.CodigodeEmpleado;
+                db_context.Add(codigo);
+                await db_context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> InsertarCargos(AgregarCargosViewModel agregarCargos)
+        {
+            var modelo = new TbCargos();
+            if(agregarCargos.CargoNombreView != null)
+            {
+                modelo.CargoNombre = agregarCargos.CargoNombreView;
+                modelo.CargoDescripcion = agregarCargos.CargoDescripcionView;
+                modelo.DeptoId = agregarCargos.DeptoIdView;
+                db_context.Add(modelo);
+                await db_context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> InsertarPeriodo(AgregarPeriodosViewModel agregarPeriodos)
+        {
+            var modelo = new TbPeriodos
+            {
+                EmpleadoId = agregarPeriodos.empleado_idView,
+                PeriodoVacacional = agregarPeriodos.periodo_vacacionalView,
+                PeriodoCantidadDiasPeriodo = agregarPeriodos.periodo_cantidad_diasView,
+                PeriodoObservaciones = agregarPeriodos.periodo_observacionesView
+
+            };
+
+            if(agregarPeriodos.periodo_vacacionalView != null)
+            {
+                db_context.Add(modelo);
+                await db_context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

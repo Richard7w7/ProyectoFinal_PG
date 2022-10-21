@@ -1,0 +1,41 @@
+﻿@model AgregarPeriodosViewModel
+@{
+    ViewData["Title"] = "Agregar Periodos";
+}
+
+<h2>Agregar cargo laboral</h2>
+<input id="viewBagPeriodo" value="@ViewBag.Periodo" readonly class="form-control" hidden />
+<form asp-action="AgregarPeriodos">
+    
+    <div class="mb-3">
+        <label asp-for="empleado_idView"  class="form-label"></label>
+        <select asp-for="empleado_idView" class="form-select" asp-items="@Model.tbempleadosView"></select> 
+    </div>
+    <div class="mb-3">
+        <label asp-for="periodo_vacacionalView" class="form-label"></label>
+        <input asp-for="periodo_vacacionalView" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="periodo_cantidad_diasView" class="form-label"></label>
+        <input asp-for="periodo_cantidad_diasView" class="form-control" />
+    </div>
+        <div class="mb-3">
+        <label asp-for="periodo_observacionesView" class="form-label"></label>
+        <input asp-for="periodo_observacionesView" class="form-control" />
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Agregar periodo</button>
+</form>
+<div class="mb-3 mt-3">
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/AgregarPeriodo.js" asp-append-version="true"></script>
+    <script>
+
+
+    </script>
+}
+

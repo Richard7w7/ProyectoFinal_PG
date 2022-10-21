@@ -5,7 +5,7 @@ namespace ProyectoFinal_PG.Models
 {
     public partial class TbCodigosempleadosmunicipales
     {
-        public int CodigoemId { get; set; }
+        public int? CodigoemId { get; set; }
         public string Codigoempleadomunicipal { get; set; }
     }
 }

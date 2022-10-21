@@ -12,6 +12,7 @@ namespace ProyectoFinal_PG.Servicios
         //inyectando metodos en la interface
         Task<IEnumerable<TbCargos>> ObtenerCargos(int deptoId);
         Task<IEnumerable<TbDepartamentosLaborales>> ObtenerDepartamentos();
+        Task<IEnumerable<TbEmpleados>> ObtenerEmpleados();
     }
     public class ServiciosRegistroLogueo: IServiciosRegistroLogueo
     {
@@ -52,6 +53,11 @@ namespace ProyectoFinal_PG.Servicios
                 .Include(x => x.Cargo)
                 .Where(emp => emp.EmpleadoCodigo == codigoemp).FirstOrDefaultAsync();
             return empleado;
+        }
+
+        public async Task<IEnumerable<TbEmpleados>> ObtenerEmpleados()
+        {
+            return await db_context.TbEmpleados.ToListAsync();
         }
     }
 }

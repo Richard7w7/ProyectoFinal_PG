@@ -1,0 +1,21 @@
+﻿@model ActualizaDatos
+
+@{
+    ViewData["Title"] = "Modificar Datos";
+}
+
+<main id="main-holder">
+    <h2 id="login-header">Actualizar datos</h2>
+    
+    <form asp-action="ModificarPerfil" id="login-form">
+      <input  asp-for="EmpleadoTelefono" class="login-form-field" placeholder="12345678">
+      <input  asp-for="EmpleadoDireccion" class="login-form-field" placeholder="Ingrese dirección exacta">
+      <button type="submit" id="login-form-submit">Actualizar datos</button>
+      <a asp-action="Perfil" type="submit" id="login-form-submitRegistrar">Regresar al perfil</a>
+    </form>
+  
+  </main>
+
+  @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+  }

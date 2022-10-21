@@ -162,3 +162,14 @@
     color:var(--blanco);
 }
 
+.containerPerfil{
+    margin: 10px 10px 10px 10px;
+}
+
+.navbarSubMenu{
+    background-color: var(--amarillo);
+}
+
+.containerAgregar{
+    margin-top:25%;
+}

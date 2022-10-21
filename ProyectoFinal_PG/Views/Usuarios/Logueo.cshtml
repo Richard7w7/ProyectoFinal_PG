@@ -9,13 +9,13 @@
     <h2 id="login-header">Ingresar</h2>
     
     <form asp-action="Logueo" id="login-form">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
       <input  asp-for="EmpleadoCodigo" class="login-form-field" placeholder="Codigo de Empleado">
       <span asp-validation-for="EmpleadoCodigo" class="text-danger"></span>
       <input  asp-for="EmpleadoContrasena" type="password" class="login-form-field" placeholder="Contraseña">
       <span asp-validation-for="EmpleadoContrasena" class="text-danger"></span>
-      <input class="form-check-input" type="checkbox" asp-for="Recuerdame" />
-      <label class="form-check-label" asp-for="Recuerdame">Recuerdame</label>
+      <label class="form-check-label" asp-for="Recuerdame">
+          <input class="form-check-input" type="checkbox" asp-for="Recuerdame" /> Recuerdame</label>
       <button type="submit" id="login-form-submit">Ingresar</button>
       <a asp-action="Registro" type="submit" id="login-form-submitRegistrar">Registrarme</a>
     </form>

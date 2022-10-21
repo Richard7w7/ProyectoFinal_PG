@@ -26,9 +26,13 @@ namespace ProyectoFinal_PG.Models
         public int SolicitudCantidadDias { get; set; }
         [Display(Name = "Periodo del cual se tomaran los días a vacacionar")]
         public string SolicitudPeriodoVacas { get; set; }
+        [Display(Name = "Comentarios de la solicitud")]
         public string SolicitudComentario { get; set; }
+        [Display(Name = "Estado de la solicitud del jefe inmediato")]
         public string SolicitudEstadoSeleJefe { get; set; }
+        [Display(Name = "Estado de la solicitud del director")]
         public string SolicitudEstadoDirector { get; set; }
+        [Display(Name = "Estado de la solicitud del director de recursos humanos")]
         public string SolicitudEstadoRrHh { get; set; }
         public int solicitud_depto_Id { get; set; }
         [NotMapped]

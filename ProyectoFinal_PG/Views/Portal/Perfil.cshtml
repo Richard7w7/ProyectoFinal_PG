@@ -1,0 +1,97 @@
+﻿@model TbEmpleados
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<div class="containerPerfil">
+    <h3 class="mb-3">Datos del Perfil</h3>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoCodigo" class="form-label"></label>
+                <input asp-for="EmpleadoCodigo" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="Cargo.CargoNombre" class="form-label"></label>
+                <input asp-for="Cargo.CargoNombre" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="Depto.DeptoNombre" class="form-label"></label>
+                <input asp-for="Depto.DeptoNombre" class="form-control" readonly />
+            </div>
+        </div>
+    </div>
+    @*Segunda Fila*@
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoNombre1" class="form-label"></label>
+                <input asp-for="EmpleadoNombre1" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoNombre2" class="form-label"></label>
+                <input asp-for="EmpleadoNombre2" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoApellido1" class="form-label"></label>
+                <input asp-for="EmpleadoApellido1" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoApellido2" class="form-label"></label>
+                <input asp-for="EmpleadoApellido2" class="form-control" readonly />
+            </div>
+        </div>
+    </div>
+     @*Tercera Fila*@
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoApellidoCasada" class="form-label"></label>
+                <input asp-for="EmpleadoApellidoCasada" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoFechaNacimiento" class="form-label"></label>
+                <input asp-for="EmpleadoFechaNacimiento" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="FechaIngresoLaboral" class="form-label"></label>
+                <input asp-for="FechaIngresoLaboral" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="EmpleadoTelefono" class="form-label"></label>
+                <input asp-for="EmpleadoTelefono" class="form-control" readonly />
+            </div>
+        </div>
+    </div>
+    @*Ultima Fila*@
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                  <label asp-for="EmpleadoDireccion" class="form-label"></label>
+                <input asp-for="EmpleadoDireccion" class="form-control" readonly />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3 mt-3">
+    <a asp-action="ModificarPerfil" class="btn btn-primary">Actualizar datos</a> -
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+    
+    </div>
+</div>

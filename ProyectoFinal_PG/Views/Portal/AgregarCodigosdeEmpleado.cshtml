@@ -1,0 +1,27 @@
+﻿@model AgregarCodigosdeEmpleado
+@{
+    ViewData["Title"] = "Agregar Departamentos";
+}
+
+<h2>Agregar Código de Empleado</h2>
+<input id="viewBagCodigo" value="@ViewBag.Codigo" readonly class="form-control" hidden />
+<form asp-action="AgregarCodigosdeEmpleado">
+    
+    <div class="mb-3">
+        <label asp-for="CodigodeEmpleado" class="form-label"></label>
+        <input asp-for="CodigodeEmpleado" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Crear código de empleado</button>
+</form>
+<div class="mb-3 mt-3">
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/CodigoEmpleado.js" asp-append-version="true"></script>
+    <script>
+
+
+    </script>
+}

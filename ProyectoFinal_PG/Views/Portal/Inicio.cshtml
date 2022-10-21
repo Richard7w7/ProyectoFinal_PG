@@ -5,5 +5,17 @@
 
 <partial name="_Submenu" model="SubMenuSolicitudes.InicioMenu" />    
 
-<h1>Bienvenido</h1>
-<h4>seleciona cualquiera de las opcinones del menu</h4>
+<h1>Bienvenido @Model.EmpleadoNombre1 @Model.EmpleadoApellido1</h1>
+<h4>seleciona cualquiera de las opcinones del menu superior</h4>
+
+@if(Model.Cargo.CargoNombre == "Director RRHH"){
+    <div class="containerAgregar">
+    <h4>Seleccione alguna opción si desea agregar algun campo</h4>
+    <a asp-action="AgregarDepartamentos" class="btn btn-primary">Agregar departamentos</a>
+    <a asp-action="AgregarCargos" class="btn btn-secondary">Agregar cargos</a>
+    <a asp-action="AgregarCodigosdeEmpleado" class="btn btn-info">Agregar códigos de empleado</a>
+    <a asp-action="AgregarPeriodos" class="btn btn-dark">Agregar periodos vacacionales</a>
+    </div>
+}else{
+
+}

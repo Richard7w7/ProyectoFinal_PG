@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoFinal_PG.Models
 {
@@ -11,7 +12,8 @@ namespace ProyectoFinal_PG.Models
             TbEmpleados = new HashSet<TbEmpleados>();
         }
 
-        public int DeptoId { get; set; }
+        public int? DeptoId { get; set; }
+        [Display(Name = "Nombre del departamento laboral")]
         public string DeptoNombre { get; set; }
         public string DeptoDescripcion { get; set; }
 

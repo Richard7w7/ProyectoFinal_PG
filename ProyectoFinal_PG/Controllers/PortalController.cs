@@ -10,13 +10,15 @@ namespace ProyectoFinal_PG.Controllers
 
         private readonly IServicioEmpleados servicioEmpleados;
         private readonly IServiciosSolicitudes serviciosSolicitudes;
+        private readonly IServiciosRegistroLogueo serviciosRegistro;
 
         public PortalController(IServicioEmpleados servicioEmpleados,
-            IServiciosSolicitudes serviciosSolicitudes)
+            IServiciosSolicitudes serviciosSolicitudes, IServiciosRegistroLogueo serviciosRegistro)
         {
 
             this.servicioEmpleados = servicioEmpleados;
             this.serviciosSolicitudes = serviciosSolicitudes;
+            this.serviciosRegistro = serviciosRegistro;
         }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposSolicitudes()
         {
@@ -176,8 +178,19 @@ namespace ProyectoFinal_PG.Controllers
             var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
             solicitudes.SolicitudesViewModel = await serviciosSolicitudes
                 .ListadoSolicitudesDepartamento(empleado.DeptoId,empleado);
-            
+            solicitudes.cargoNombre = empleado.Cargo.CargoNombre;
             return View("SolicitudesDepartamento",solicitudes);
+        }
+
+        public async Task<IActionResult> ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar()
+        {
+            var solicitudes = new empListadoSoli();
+            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+            var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+            solicitudes.SolicitudesViewModel = await serviciosSolicitudes
+                .ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar();
+            solicitudes.cargoNombre = empleado.Cargo.CargoNombre;
+            return View("SolicitudesDepartamento", solicitudes);
         }
 
         [HttpPost]
@@ -190,6 +203,155 @@ namespace ProyectoFinal_PG.Controllers
             
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Perfil()
+        {
+
+            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+            var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+            return View(empleado);
+        }
+
+        [HttpGet]
+        public IActionResult ModificarPerfil()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModificarPerfil(ActualizaDatos actualizaDatos)
+        {
+            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+            var empleado = await serviciosSolicitudes.ActualizarDatos(actualizaDatos,empleadoId);
+            if(empleado != false) { 
+            return RedirectToAction("Perfil");
+            }
+            return RedirectToAction("Perfil");
+        }
+
+        public IActionResult AgregarDepartamentos()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> AgregarCargos()
+        {
+            var modelo = new AgregarCargosViewModel
+            {
+                tbDepartamentosSelect = await ObtenerDepartamentos()
+            };
+            return View(modelo);
+        }
+        private async Task<IEnumerable<SelectListItem>> ObtenerDepartamentos()
+        {
+            var departamentos = await serviciosRegistro.ObtenerDepartamentos();
+            return departamentos.Select(x => new SelectListItem(x.DeptoNombre, x.DeptoId.ToString()));
+        }
+        public IActionResult AgregarCodigosdeEmpleado()
+        {
+            return View();
+        }
+        public async Task<IActionResult> AgregarPeriodos()
+        {
+            var modelo = new AgregarPeriodosViewModel
+            {
+                tbempleadosView = await ObtenerEmpleados()
+            };
+            return View(modelo);
+            
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarDepartamentos(AgregarDepartamentos departamentos)
+        {
+            if(departamentos == null)
+            {
+                ViewBag.Departamento = "NO";
+                return View();
+            }
+            var agrego = await serviciosSolicitudes.InsertarDepartamento(departamentos);
+            if(agrego != false)
+            {
+                ViewBag.Departamento = "SI";
+                return View();
+            }
+            ViewBag.Departamento = "NO";
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarCargos(AgregarCargosViewModel cargos)
+        {
+            var modelo = new AgregarCargosViewModel
+            {
+                tbDepartamentosSelect = await ObtenerDepartamentos()
+            };
+            if (cargos == null)
+            {
+                ViewBag.Cargo = "NO";
+                return View(modelo);
+            }
+            var resultado = await serviciosSolicitudes.InsertarCargos(cargos);
+            if (resultado != false)
+            {
+                ViewBag.Cargo = "SI";
+                modelo.CargoDescripcionView = null;
+                modelo.CargoNombreView = null;
+                return View(modelo);
+            }
+            ViewBag.Cargo = "NO";
+            return View(modelo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarCodigosdeEmpleado(AgregarCodigosdeEmpleado codigoEmpleado)
+        {
+            if (codigoEmpleado== null)
+            {
+                ViewBag.Codigo= "NO";
+                return View();
+            }
+            var agrego = await serviciosSolicitudes.InsertarCodigo(codigoEmpleado);
+            if (agrego != false)
+            {
+                ViewBag.Codigo = "SI";
+                return View();
+            }
+            ViewBag.Codigo = "NO";
+            return View();
+            
+        }
+        [HttpPost]
+        public async  Task<IActionResult> AgregarPeriodos(AgregarPeriodosViewModel agregarPeriodos)
+        {
+            var modelo = new AgregarPeriodosViewModel
+            {
+                tbempleadosView = await ObtenerEmpleados()
+            };
+            if (agregarPeriodos.periodo_vacacionalView == null)
+            {
+                ViewBag.Periodo = "NO";
+                return View(modelo);
+            }
+            var resultado = await serviciosSolicitudes.InsertarPeriodo(agregarPeriodos);
+            if (resultado != false)
+            {
+                ViewBag.Periodo = "SI";
+                modelo.periodo_cantidad_diasView = 0;
+                modelo.periodo_vacacionalView = null;
+                modelo.periodo_observacionesView = null;
+                modelo.tbempleadosView = await ObtenerEmpleados();
+                return View(modelo);
+            }
+            ViewBag.Periodo = "NO";
+            return View(modelo);
+           
+            
+        }
+
+        private async Task<IEnumerable<SelectListItem>> ObtenerEmpleados()
+        {
+            var empleados = await serviciosRegistro.ObtenerEmpleados();
+            return empleados.Select(x => new SelectListItem(x.EmpleadoCodigo, x.EmpleadoId.ToString()));
+        }
 
     }
 }
