@@ -55,4 +55,21 @@ else
             </div>
         </div>
     </div>
-}
+    <div class="mb-3 mt-3">
+    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+    </div>
+     @if(Model.SolicitudesViewModelDetalle.EstadosolicitudId == (int)enumEstados.aproboDirectorRRHH||
+    Model.SolicitudesViewModelDetalle.EstadosolicitudId == (int)enumEstados.DenegoDirectorRRHH){
+         <a asp-action="GenerarTemplatePDF" asp-route-id="@Model.SolicitudesViewModelDetalle.SolicitudId"
+                   class="btn btn-primary">Imprimir Solicitud</a>
+    }
+    else{
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  Unicamente puedes imprimir las solicitudes que fueron <strong>Aprobadas o Denegadas por Recursos Humanos</strong> 
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+        }
+    }
+   

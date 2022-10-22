@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 var politicaUsuariosAutenticados = new AuthorizationPolicyBuilder()
     .RequireAuthenticatedUser()
     .Build();
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense
+    ("Mgo+DSMBMAY9C3t2VVhjQlFac19JXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRd0VhWH1cdHZQT2VVV0c=");
 builder.Services.AddControllersWithViews(opc =>
 {
     opc.Filters.Add(new AuthorizeFilter(politicaUsuariosAutenticados));
@@ -30,7 +32,9 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddTransient<IServiciosRegistroLogueo, ServiciosRegistroLogueo>();
 builder.Services.AddTransient<IServicioEmpleados, ServicioEmpleados>();
 builder.Services.AddTransient<IServiciosSolicitudes, ServiciosSolicitudes>();
+
 builder.Services.AddTransient<IUserStore<TbEmpleados>, EmpleadoStore>();
+
 builder.Services.AddTransient<SignInManager<TbEmpleados>>();
 
 builder.Services.AddIdentityCore<TbEmpleados>();

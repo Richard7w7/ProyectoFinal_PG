@@ -360,10 +360,10 @@ namespace ProyectoFinal_PG.Servicios
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if(solicitud.EstadosolicitudId == (int)enumEstados.aproboJefeInmediato)
                     {
-                        soli.SolicitudEstadoSeleJefe = "Aprobada";
+                        soli.SolicitudEstadoSeleJefe = "Aprobada "+empleado.EmpleadoNombre1+" "+empleado.EmpleadoApellido1;
                     }else if(solicitud.EstadosolicitudId == (int)enumEstados.DenegoJefeInmediato)
                     {
-                        soli.SolicitudEstadoSeleJefe = "Denegada";
+                        soli.SolicitudEstadoSeleJefe = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
 
                     await db_context.SaveChangesAsync();
@@ -376,11 +376,11 @@ namespace ProyectoFinal_PG.Servicios
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if (solicitud.EstadosolicitudId == (int)enumEstados.aproboDirector)
                     {
-                        soli.SolicitudEstadoDirector = "Aprobada";
+                        soli.SolicitudEstadoDirector = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
                     else if (solicitud.EstadosolicitudId == (int)enumEstados.DenegoDirector)
                     {
-                        soli.SolicitudEstadoDirector = "Denegada";
+                        soli.SolicitudEstadoDirector = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
                     await db_context.SaveChangesAsync();
                     return true;
@@ -393,13 +393,13 @@ namespace ProyectoFinal_PG.Servicios
                     {
                         if(soli.SolicitudPeriodoVacas == null)
                         {
-                            soli.SolicitudEstadoRrHh = "Aprobada";
+                            soli.SolicitudEstadoRrHh = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                             await db_context.SaveChangesAsync();
                             return true;
                         }
                         else
                         {
-                            soli.SolicitudEstadoRrHh = "Aprobada";
+                            soli.SolicitudEstadoRrHh = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                             var periodo = await ObtenerPeriodoPorId((int)soli.PeriodoId);
                             periodo.PeriodoCantidadDiasPeriodo -= soli.SolicitudCantidadDias;
                             await db_context.SaveChangesAsync();
@@ -409,7 +409,7 @@ namespace ProyectoFinal_PG.Servicios
                     }
                     else if (solicitud.EstadosolicitudId == (int)enumEstados.DenegoDirectorRRHH)
                     {
-                        soli.SolicitudEstadoRrHh = "Denegada";
+                        soli.SolicitudEstadoRrHh = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
                     await db_context.SaveChangesAsync();
                     return true;
