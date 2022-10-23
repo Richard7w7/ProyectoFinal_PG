@@ -5,16 +5,43 @@
 }
 
 <partial name="_Submenu" model="SubMenuSolicitudes.CrearSolicitud" />
+<input id="viewBagLimiteDias" value="@ViewBag.Solicitud" readonly class="form-control" hidden />
+@if(ViewBag.Periodo == null)
+{
+   
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         <h1>Ya no tienes periodos disponibles</h1>
+        <h6>te has acabado todos tus periodos con dias de vacaciones disponibles.</h6>
+        <p>espera a que nuevamente recursos humanos te agregue el proximo periodo de vacaciones.<br />
+            Recuerda que unicamente puedes crear solicitudes de tipo <strong>Licencia o Permiso</strong></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 @if (ViewBag.Idemp != false)
 {
-    <h1>Tienes solicitudes pendientes de aprobación</h1>
-
+    @if(ViewBag.Periodo == null)
+    {
+        <h1>No puedes crear solicitudes del tipo vacacional </h1>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6>Toma en cuenta lo siguiente:</h6>
+        Al no tener periodos vacacionales disponibles, es imposible crear solicitudes del tipo <strong>Vacacional</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    }
+    else
+    {
+    <h1>Tienes solicitudes pendientes de aprobación</h1>    
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <h6>Toma en cuenta lo siguiente:</h6>
         Al tener solicitudes pendientes de aprobación esto te impide crear mas solicitudes.<br>
         Por favor espera a que tu solicitud sea aprobada o denegada.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    }
+
+
+    
 }else{
 <h1>Ingresa los datos para crear tu solicitud</h1>
 
@@ -58,7 +85,7 @@
             </div>
             <div class="col">
                 <div class="mt-3">
-                    <button class="btn btn-primary" type="submit">Crear Solicitud</button>
+                    <button class="btn btn-outline-light" type="submit">Crear Solicitud</button>
                 </div>
             </div>
         </div>

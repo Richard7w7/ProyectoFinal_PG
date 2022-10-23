@@ -101,7 +101,8 @@ namespace ProyectoFinal_PG.Servicios
             string anosperiodos = null;
             empleado = await BuscarEmpleadoporID(empleadoId);
             periodos = await BuscarPeriodosPorId(empleadoId);
-
+            if(periodos.Count() != 0)
+            { 
             for (int i = 0; i < periodos.Count(); i++)
             {
                 anosperiodos += periodos[i].PeriodoVacacional.ToString() + ",";
@@ -129,7 +130,10 @@ namespace ProyectoFinal_PG.Servicios
                 }
             }
 
-            return (empleado);
+            return empleado;
+            }
+
+            return empleado;
         }
 
         public async Task<IEnumerable<TbTipossolicitudes>> ObtenerTiposSolicitudes()

@@ -56,12 +56,12 @@ else
         </div>
     </div>
     <div class="mb-3 mt-3">
-    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+    <a asp-action="Inicio" class="btn btn-outline-warning">Regresar al menu principal</a>
     </div>
      @if(Model.SolicitudesViewModelDetalle.EstadosolicitudId == (int)enumEstados.aproboDirectorRRHH||
     Model.SolicitudesViewModelDetalle.EstadosolicitudId == (int)enumEstados.DenegoDirectorRRHH){
          <a asp-action="GenerarTemplatePDF" asp-route-id="@Model.SolicitudesViewModelDetalle.SolicitudId"
-                   class="btn btn-primary">Imprimir Solicitud</a>
+                   class="btn btn-outline-info">Imprimir Solicitud</a>
     }
     else{
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

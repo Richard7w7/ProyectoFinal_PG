@@ -277,7 +277,7 @@ namespace ProyectoFinal_PG
 
                 entity.Property(e => e.TiposolicitudId).HasColumnName("tiposolicitud_id");
 
-                entity.Property(e => e.solicitud_depto_Id).HasColumnName("solicitud_depto_Id");
+                entity.Property(e => e.solicitud_depto_Id).HasColumnName("solicitud_depto_id");
 
                 entity.HasOne(d => d.Empleado)
                     .WithMany(p => p.TbSolicitudes)

@@ -1,4 +1,4 @@
-﻿using iTextSharp.text.pdf;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ProyectoFinal_PG.Models;
@@ -132,6 +132,7 @@ namespace ProyectoFinal_PG.Controllers
             int idemp = (int)empleado.EmpleadoId;
             var haysoli = await serviciosSolicitudes.BuscarsolicitudesconEstadoEnviado(idemp);
             empleadomodel = await serviciosSolicitudes.ObtenerPeriodosPorId(idemp);
+
             ViewBag.Periodo = empleadomodel.Periodo;
             ViewBag.Dias = empleadomodel.cantidad_dias;
             ViewBag.Idemp = haysoli;
@@ -149,6 +150,11 @@ namespace ProyectoFinal_PG.Controllers
             ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
             int dias = cantidadDias.Length;
             int diaslimites = (int)ViewBag.Dias;
+            if(modelo.TiposolicitudId == (int)EnumtipoSolicitud.Vacacional && modelo.SolicitudPeriodoVacas == null)
+            {
+                ViewBag.Solicitud = "SinPeriodo";
+                return View();
+            }
             if ( dias > diaslimites)
             {
                 

@@ -1,24 +1,24 @@
 ﻿@model SubMenuSolicitudes
 
 <ul class="nav nav-pills nav-fill mb-3">
-     <li class="nav-item">
-        <a class="nav-link @(Model == SubMenuSolicitudes.InicioMenu? "active":null)"
+     <li class="nav-item @(Model == SubMenuSolicitudes.InicioMenu? "botonMenu":null)">
+        <a class="nav-link enlace"
         asp-action="Inicio">Inicio</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @(Model == SubMenuSolicitudes.CrearSolicitud ? "active":null)"
+    <li class="nav-item @(Model == SubMenuSolicitudes.CrearSolicitud? "botonMenu":null)">
+        <a class="nav-link enlace"
         asp-action="CrearSolicitud">Crear Solicitud</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @(Model == SubMenuSolicitudes.DetallesSolicitud ? "active":null)"
+    <li class="nav-item @(Model == SubMenuSolicitudes.DetallesSolicitud? "botonMenu":null)">
+        <a class="nav-link enlace"
         asp-action="DetallesSolicitud">Detalles de la Solicitud</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @(Model == SubMenuSolicitudes.ListadodeSolicitudes ? "active":null)"
+    <li class="nav-item @(Model == SubMenuSolicitudes.ListadodeSolicitudes? "botonMenu":null)">
+        <a class="nav-link enlace"
         asp-action="ListadeSolicitudes">Listado de Solicitudes</a>
     </li>
-     <li class="nav-item">
-        <a class="nav-link @(Model == SubMenuSolicitudes.PeriodosVacacionales ? "active":null)"
+     <li class="nav-item @(Model == SubMenuSolicitudes.PeriodosVacacionales? "botonMenu":null)">
+        <a class="nav-link enlace"
         asp-action="PeriodosVacacionales">Periodos Vacacionales</a>
     </li>
     

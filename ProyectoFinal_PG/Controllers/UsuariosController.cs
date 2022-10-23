@@ -13,6 +13,7 @@ namespace ProyectoFinal_PG.Controllers
         private readonly UserManager<TbEmpleados> userManager;
         private readonly SignInManager<TbEmpleados> signInManager;
         private readonly IServiciosRegistroLogueo serviciosRegistroLogueo;
+        
 
         public UsuariosController( UserManager<TbEmpleados> userManager, SignInManager<TbEmpleados> signInManager,
             IServiciosRegistroLogueo serviciosRegistroLogueo)
@@ -20,6 +21,7 @@ namespace ProyectoFinal_PG.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.serviciosRegistroLogueo = serviciosRegistroLogueo;
+            
         }
         [AllowAnonymous]
         public async Task<IActionResult> Registro()
@@ -49,10 +51,14 @@ namespace ProyectoFinal_PG.Controllers
             }
             else
             {
-                foreach(var error in resultado.Errors)
+                
+                empleados.Departamentos = await ObtenerDepartamentos();
+                empleados.Cargos = await ObtenerCargos(1);
+                foreach (var error in resultado.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
                 return View(empleados);
             }
             
@@ -62,6 +68,26 @@ namespace ProyectoFinal_PG.Controllers
         {
             return View();
         }
+
+        [AllowAnonymous]
+        public IActionResult ValidarDatos()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> ValidarDatos(RecuperarContraseñaModel recuperarContraseña)
+        {
+            var resultado = await serviciosRegistroLogueo.ValidarDatos(recuperarContraseña);
+            
+
+
+
+
+            return View();
+        }
+
 
         private async Task<IEnumerable<SelectListItem>> ObtenerDepartamentos()
         {
@@ -114,5 +140,6 @@ namespace ProyectoFinal_PG.Controllers
                 return View(empleado);
             }
         }
+        
     }
 }

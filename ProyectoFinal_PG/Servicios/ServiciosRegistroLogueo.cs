@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using ProyectoFinal_PG.Models;
 
 namespace ProyectoFinal_PG.Servicios
@@ -13,11 +14,13 @@ namespace ProyectoFinal_PG.Servicios
         Task<IEnumerable<TbCargos>> ObtenerCargos(int deptoId);
         Task<IEnumerable<TbDepartamentosLaborales>> ObtenerDepartamentos();
         Task<IEnumerable<TbEmpleados>> ObtenerEmpleados();
+        Task<TbEmpleados> ValidarDatos(RecuperarContraseñaModel recuperarContraseña);
     }
     public class ServiciosRegistroLogueo: IServiciosRegistroLogueo
     {
         //declaracion de variales de solo lectura
         private readonly BD_ControlVacacionalContext db_context;
+        
 
         //declaracion de constructor
         public ServiciosRegistroLogueo(BD_ControlVacacionalContext dB_Control_Context)
@@ -59,5 +62,24 @@ namespace ProyectoFinal_PG.Servicios
         {
             return await db_context.TbEmpleados.ToListAsync();
         }
+
+        public async Task<TbEmpleados> ValidarDatos(RecuperarContraseñaModel recuperarContraseña)
+        {
+            var resultado = await db_context.TbEmpleados
+                .Include(x => x.Cargo)
+                .Where(emp => emp.EmpleadoCodigo == recuperarContraseña.CodigoEmpleado)
+                .Where(emp => emp.EmpleadoTelefono == recuperarContraseña.TelefonoEmpleado)
+                .Where(emp => emp.EmpleadoFechaNacimiento== recuperarContraseña.FechaNacimiento).FirstOrDefaultAsync();
+
+            return resultado;
+        }
+
+        //public async Task<bool> CambiarContraseña(TbEmpleados empleados)
+        //{
+        //    var empleado = await BuscarPorCodigoEmpleado(empleados.EmpleadoContrasena);
+        //    var contrahash = userManager.
+
+
+        //}
     }
 }

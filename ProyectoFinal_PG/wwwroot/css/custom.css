@@ -57,7 +57,7 @@
         content: "";
         height: 3px;
         width: 0%;
-        background: var(--azul);
+        background: var(--amarillo);
         position: absolute;
         left: 0;
         bottom: -12px;
@@ -172,4 +172,33 @@
 
 .containerAgregar{
     margin-top:25%;
+}
+
+.ContenedorCentral {
+    background-color: var(--extra);
+    color:var(--blanco);
+}
+
+table td, thead, th{
+    color:var(--blanco);
+}
+
+.MenuPrincipal{
+    background-color:var(--amarillo) !important;
+}
+
+.botonMenu{
+    background:var(--azul);
+}
+
+.botonMenu .nav-link{
+    color:var(--amarillo);
+}
+
+.activo{
+    background-color:var(--azul);
+}
+
+.enlace{
+    color:var(--amarillo)
 }

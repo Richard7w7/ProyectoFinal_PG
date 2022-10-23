@@ -58,17 +58,17 @@ $(function () {
                 icon: "success",
             });
             break;
+        case 'SinPeriodo':
+            Swal.fire({
+                title: "Ya no tienes periodos",
+                text: "Lo sentimos ya no puedes crear solicitudes del tipo vacacional ya que te has ",
+                icon: "warning",
+            });
+            break;
         default:
             break;
     }
 
-    if (opcion == 'limite') {
-        Swal.fire({
-
-            title: "Limite de días alcanzado",
-            text: "la cantidad de días seleccionados supera a la cantidad de días disponibles",
-            icon: "warning",
-        });
-    }
+    
 });
 

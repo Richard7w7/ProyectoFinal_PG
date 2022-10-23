@@ -8,12 +8,12 @@
 @if(Model.cargoNombre == "Director"||Model.cargoNombre == "Jefe Inmediato"
 ||Model.cargoNombre == "Director RRHH")
 {
-    <a class="btn btn-primary" 
-    asp-action="ListarSolicitudesDepartamento">Ver Solicitudes del departamento</a>
+    <a class="btn btn-outline-warning" 
+    asp-action="ListarSolicitudesDepartamento">Ver Solicitudes para aprobación o denegación del departamento</a>
 }
 @if(Model.cargoNombre == "Director RRHH")
 {
-     <a class="btn btn-primary" 
+     <a class="btn btn-outline-warning" 
     asp-action="ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar">Ver Solicitudes para aprobación o denegación de todos los departamento</a>
 }
 <table class="table">
@@ -35,8 +35,8 @@
 
                     <td>
                         <a asp-action="DetallesSolicitud" asp-route-id="@periodo.SolicitudId"
-                   class="btn btn-primary">ver Detalles</a>
-                        <a class="btn btn-success">Imprimir</a>
+                   class="btn btn-outline-info">ver Detalles</a>
+                        
                     </td>
                 </tr>
             }
@@ -44,15 +44,15 @@
     </table>
 
 <div class="mb-3 mt-3">
-    <a asp-action="ListadeSolicitudes" class="btn btn-primary">Filtrar por solicitudes enviadas</a>
+    <a asp-action="ListadeSolicitudes" class="btn btn-outline-warning">Filtrar por solicitudes enviadas</a>
 </div>
 <div class="mb-3 mt-3">
-    <a asp-action="FiltrarporAprobado" class="btn btn-success">Filtrar por solicitudes aprobadas</a>
+    <a asp-action="FiltrarporAprobado" class="btn btn-outline-info">Filtrar por solicitudes aprobadas</a>
 </div>
 <div class="mb-3 mt-3">
-    <a asp-action="FiltrarporDenegado" class="btn btn-danger">Filtrar por solicitudes denegadas</a>
+    <a asp-action="FiltrarporDenegado" class="btn btn-outline-danger">Filtrar por solicitudes denegadas</a>
 </div>
 
 <div class="mb-3 mt-3">
-    <a asp-action="Inicio" class="btn btn-dark">Regresar al menu principal</a>
+    <a asp-action="Inicio" class="btn btn-outline-light">Regresar al menu principal</a>
 </div>

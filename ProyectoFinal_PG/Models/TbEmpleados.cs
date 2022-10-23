@@ -42,7 +42,7 @@ namespace ProyectoFinal_PG.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Fecha de Nacimiento")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy'-'MM'-'dd}", ApplyFormatInEditMode = true)]
         public DateTime EmpleadoFechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -55,7 +55,7 @@ namespace ProyectoFinal_PG.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Fecha Ingreso Laboral")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy'-'MM'-'dd}", ApplyFormatInEditMode = true)]
         public DateTime FechaIngresoLaboral { get; set; }
         [NotMapped]
         public virtual bool Recuerdame { get; set; }

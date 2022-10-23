@@ -1,0 +1,33 @@
+﻿@model RecuperarContraseñaModel
+@{
+    ViewData["Title"] = "Recuperación de Contraseña";
+}
+
+
+
+<main id="main-holder">
+    <h2 id="login-header">Recuperación de Contraseña</h2>
+    
+    <form asp-action="ValidarDatos" id="login-form">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      <label asp-for="CodigoEmpleado" class="form-label"></label>
+      <input  asp-for="CodigoEmpleado" class="login-form-field" placeholder="Codigo de Empleado">
+      <span asp-validation-for="CodigoEmpleado" class="text-danger"></span>
+      <label asp-for="TelefonoEmpleado" class="form-label"></label>
+      <input  asp-for="TelefonoEmpleado" class="login-form-field" placeholder="12345678">
+      <span asp-validation-for="TelefonoEmpleado" class="text-danger"></span>
+      <label asp-for="FechaNacimiento" class="form-label"></label>
+      <input  asp-for="FechaNacimiento" class="login-form-field">
+      <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+      <label asp-for="ContrasenaHash" class="form-label"></label>
+      <input  asp-for="ContrasenaHash" class="login-form-field">
+      <span asp-validation-for="ContrasenaHash" class="text-danger"></span>
+      <button type="submit" id="login-form-submit">Recuperar</button>
+      <a asp-action="Logueo" type="submit" id="login-form-submitRegistrar">Regresar</a>
+    </form>
+  
+  </main>
+
+  @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+  }
