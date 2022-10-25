@@ -14,6 +14,7 @@ namespace ProyectoFinal_PG.Models
         public int EstadosolicitudId { get; set; }
         public int? EmpleadoId { get; set; }
         public int? PeriodoId { get; set; }
+        [Display(Name = "Fecha de Solicitud")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
         public DateTime SolicitudFecha { get; set; }
@@ -23,6 +24,7 @@ namespace ProyectoFinal_PG.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Fechas Seleccionadas")]
         public string SolicitudFechasSeleccionadas { get; set; }
+        [Display(Name = "Cantidad de días")]
         public int SolicitudCantidadDias { get; set; }
         [Display(Name = "Periodo del cual se tomaran los días a vacacionar")]
         public string SolicitudPeriodoVacas { get; set; }

@@ -18,7 +18,7 @@ namespace ProyectoFinal_PG.Servicios
         Task<bool> InsertarCodigo(AgregarCodigosdeEmpleado agregarCodigosdeEmpleado);
         Task<bool> InsertarDepartamento(AgregarDepartamentos agregarDepartamentos);
         Task<bool> InsertarPeriodo(AgregarPeriodosViewModel agregarPeriodos);
-        Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesDepartamento(int deptoId,TbEmpleados empleado);
+        Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesDepartamento(int deptoId, TbEmpleados empleado);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoAprobadas(int empleadoId);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoDenegadas(int empleadoId);
         Task<IEnumerable<TbSolicitudes>> ListadoSolicitudesEmpleadoId(int empleadoId);
@@ -30,11 +30,11 @@ namespace ProyectoFinal_PG.Servicios
         Task<TbSolicitudes> ObtenerSolicitudDetalle(int? idsolicitud, int empleado);
         Task<IEnumerable<TbTipossolicitudes>> ObtenerTiposSolicitudes();
     }
-    public class ServiciosSolicitudes: IServiciosSolicitudes
+    public class ServiciosSolicitudes : IServiciosSolicitudes
     {
         private readonly BD_ControlVacacionalContext db_context;
         private readonly IServicioEmpleados servicioEmpleados;
-        
+
 
         public ServiciosSolicitudes(BD_ControlVacacionalContext dB_Control_Context,
             IServicioEmpleados servicioEmpleados)
@@ -67,13 +67,13 @@ namespace ProyectoFinal_PG.Servicios
             List<TbPeriodos> periodos;
             periodos = await db_context.TbPeriodos.
                 Where(pdo => pdo.EmpleadoId == codigoemp)
-                .Where(pdo => pdo.PeriodoCantidadDiasPeriodo >0).ToListAsync();
+                .Where(pdo => pdo.PeriodoCantidadDiasPeriodo > 0).ToListAsync();
             return periodos;
         }
 
         public async Task<bool> BuscarsolicitudesconEstadoEnviado(int codigoemp)
         {
-            
+
             var solicitud = await db_context.TbSolicitudes
                 .Include(soli => soli.Empleado)
                 .Include(soli => soli.Tiposolicitud)
@@ -81,59 +81,66 @@ namespace ProyectoFinal_PG.Servicios
                 .Include(soli => soli.Periodo)
                 .Where(soli => soli.EmpleadoId == codigoemp)
                 .Where(soli => soli.EstadosolicitudId == (int)enumEstadoSolicitud.Enviada).FirstOrDefaultAsync();
-            
-            if(solicitud != null)
+
+            if (solicitud != null)
             {
                 return true;
             }
-            else 
+            else
             {
                 return false;
             }
         }
 
         //Metodo para obtener el periodo mas antiguo
-        public async Task<TbEmpleados>ObtenerPeriodosPorId(int empleadoId)
+        public async Task<TbEmpleados> ObtenerPeriodosPorId(int empleadoId)
         {
-            
+
             var empleado = new TbEmpleados();
             List<TbPeriodos> periodos;
             string anosperiodos = null;
             empleado = await BuscarEmpleadoporID(empleadoId);
             periodos = await BuscarPeriodosPorId(empleadoId);
-            if(periodos.Count() != 0)
-            { 
-            for (int i = 0; i < periodos.Count(); i++)
+            var cantidadPeriodos = 0;
+            cantidadPeriodos = periodos.Count();
+            if (cantidadPeriodos > 0)
             {
-                anosperiodos += periodos[i].PeriodoVacacional.ToString() + ",";
-            }
-            string[] separaperiodos = anosperiodos.Split(',');
-            string final = null;
-            foreach (var sepa in separaperiodos)
-            {
-                final += sepa + "/";
-            }
-            string[] finali = final.Split('/');
-            finali = finali.Take(finali.Length - 2).ToArray();
-            int[] numeros = Array.ConvertAll(finali, n => int.Parse(n));
-            var menor = numeros.Min().ToString();
-            for (int i = 0; i < periodos.Count(); i++)
-            {
-                string ano = periodos[i].PeriodoVacacional.Substring(0, 4);
-                if (menor.Equals(ano))
+                for (int i = 0; i < periodos.Count(); i++)
                 {
-
-                    empleado.Periodo = periodos[i].PeriodoVacacional;
-                    empleado.cantidad_dias = periodos[i].PeriodoCantidadDiasPeriodo;
-                    empleado.periodo_id= (int)periodos[i].PeriodoId;
-
+                    anosperiodos += periodos[i].PeriodoVacacional.ToString() + ",";
                 }
+                string[] separaperiodos = anosperiodos.Split(',');
+                string final = null;
+                foreach (var sepa in separaperiodos)
+                {
+                    final += sepa + "/";
+                }
+                string[] finali = final.Split('/');
+                finali = finali.Take(finali.Length - 2).ToArray();
+                int[] numeros = Array.ConvertAll(finali, n => int.Parse(n));
+                var menor = numeros.Min().ToString();
+                for (int i = 0; i < periodos.Count(); i++)
+                {
+                    string ano = periodos[i].PeriodoVacacional.Substring(0, 4);
+                    if (menor.Equals(ano))
+                    {
+
+                        empleado.Periodo = periodos[i].PeriodoVacacional;
+                        empleado.cantidad_dias = periodos[i].PeriodoCantidadDiasPeriodo;
+                        empleado.periodo_id = (int)periodos[i].PeriodoId;
+
+                    }
+                }
+
+                return empleado;
+            }
+            else
+            {
+                return empleado;
+
             }
 
-            return empleado;
-            }
 
-            return empleado;
         }
 
         public async Task<IEnumerable<TbTipossolicitudes>> ObtenerTiposSolicitudes()
@@ -148,7 +155,7 @@ namespace ProyectoFinal_PG.Servicios
             var periodoVencer = new TbEmpleados();
             string[] cantidadDias = modelo.SolicitudFechasSeleccionadas.Split(',');
             var empleadoId = servicioEmpleados.ObtenerEmpleadoId();
-            
+
             empleado = await BuscarEmpleadoporCodigo(empleadoId);
             int idemp = (int)empleado.EmpleadoId;
             periodoVencer = await ObtenerPeriodosPorId(idemp);
@@ -163,16 +170,16 @@ namespace ProyectoFinal_PG.Servicios
                 modelo.PeriodoId = null;
                 modelo.SolicitudPeriodoVacas = "Ninguno";
             }
-           
+
 
             db_context.Add(modelo);
             await db_context.SaveChangesAsync();
-            int idsolicitud =(int) modelo.SolicitudId;
+            int idsolicitud = (int)modelo.SolicitudId;
             return idsolicitud;
 
         }
 
-        public async Task<TbSolicitudes> ObtenerSolicitudDetalle(int? idsolicitud,int empleado)
+        public async Task<TbSolicitudes> ObtenerSolicitudDetalle(int? idsolicitud, int empleado)
         {
             var solicitud = new TbSolicitudes();
             solicitud = await db_context.TbSolicitudes
@@ -188,10 +195,10 @@ namespace ProyectoFinal_PG.Servicios
 
         public async Task<IEnumerable<TbPeriodos>> ObtenerPeriodosEmpleadoId(int empleadoId)
         {
-            
+
             var periodos = await db_context.TbPeriodos
                 .Include(t => t.Empleado)
-                .Where(periodo => periodo.EmpleadoId == empleadoId).ToListAsync();            
+                .Where(periodo => periodo.EmpleadoId == empleadoId).ToListAsync();
             return periodos;
         }
 
@@ -200,7 +207,7 @@ namespace ProyectoFinal_PG.Servicios
             var solicitudes = await db_context.TbSolicitudes
                 .Include(t => t.Empleado)
                 .Include(t => t.Tiposolicitud)
-                .Include(t=> t.Estadosolicitud)
+                .Include(t => t.Estadosolicitud)
                 .Where(t => t.EmpleadoId == empleadoId)
                 .Where(t => t.EstadosolicitudId == (int)enumEstadoSolicitud.Enviada).ToListAsync();
 
@@ -234,20 +241,20 @@ namespace ProyectoFinal_PG.Servicios
             return solicitudes;
         }
 
-        public async Task<IEnumerable<TbSolicitudes>> 
-            ListadoSolicitudesDepartamento(int deptoId,TbEmpleados empleado)
+        public async Task<IEnumerable<TbSolicitudes>>
+            ListadoSolicitudesDepartamento(int deptoId, TbEmpleados empleado)
         {
-            
+
             switch (empleado.Cargo.CargoNombre)
             {
                 case "Jefe Inmediato":
-                     var solicitudes = await db_context.TbSolicitudes
-                    .Include(t => t.Empleado)
-                    .Include(t => t.Tiposolicitud)
-                    .Include(t => t.Estadosolicitud)
-                    .Where(t => t.solicitud_depto_Id == deptoId)
-                    .Where(t => t.EstadosolicitudId==(int)enumEstados.enviada)
-                    .ToListAsync();
+                    var solicitudes = await db_context.TbSolicitudes
+                   .Include(t => t.Empleado)
+                   .Include(t => t.Tiposolicitud)
+                   .Include(t => t.Estadosolicitud)
+                   .Where(t => t.solicitud_depto_Id == deptoId)
+                   .Where(t => t.EstadosolicitudId == (int)enumEstados.enviada)
+                   .ToListAsync();
 
                     return solicitudes;
                 case "Director":
@@ -275,16 +282,16 @@ namespace ProyectoFinal_PG.Servicios
                    .Include(t => t.Empleado)
                    .Include(t => t.Tiposolicitud)
                    .Include(t => t.Estadosolicitud)
-                   .Where(t => t.solicitud_depto_Id == deptoId) 
+                   .Where(t => t.solicitud_depto_Id == deptoId)
                    .ToListAsync();
 
                     return solicitudes;
-                    
+
             }
 
         }
 
-        public async Task<IEnumerable<TbSolicitudes>> 
+        public async Task<IEnumerable<TbSolicitudes>>
             ListarSolicitudesdeTodosDepartamentosparaAprobarDenegar()
         {
             var solicitudes = await db_context.TbSolicitudes
@@ -301,13 +308,14 @@ namespace ProyectoFinal_PG.Servicios
             var solicitud = new TbSolicitudes();
             solicitud = await db_context.TbSolicitudes
                        .Include(soli => soli.Empleado)
+                       .Include(soli => soli.Empleado.Cargo)
                        .Include(soli => soli.Tiposolicitud)
                        .Include(soli => soli.Estadosolicitud)
                        .Include(soli => soli.Periodo)
                        .Where(soli => soli.SolicitudId == id)
                        .FirstOrDefaultAsync();
             return solicitud;
-            
+
 
         }
 
@@ -317,7 +325,7 @@ namespace ProyectoFinal_PG.Servicios
             {
                 case "Jefe Inmediato":
                     var estados = await db_context.TbEstadosolicitudes
-                      .Where(e => e.EstadosolicitudId == 
+                      .Where(e => e.EstadosolicitudId ==
                       (int)enumEstados.aproboJefeInmediato || e.EstadosolicitudId == (int)enumEstados.DenegoJefeInmediato)
                       .ToListAsync();
 
@@ -325,7 +333,7 @@ namespace ProyectoFinal_PG.Servicios
 
                 case "Director":
                     estados = await db_context.TbEstadosolicitudes
-                    .Where(e => e.EstadosolicitudId == 
+                    .Where(e => e.EstadosolicitudId ==
                     (int)enumEstados.aproboDirector || e.EstadosolicitudId == (int)enumEstados.DenegoDirector)
                     .ToListAsync();
 
@@ -333,7 +341,7 @@ namespace ProyectoFinal_PG.Servicios
 
                 case "Director RRHH":
                     estados = await db_context.TbEstadosolicitudes
-                    .Where(e => e.EstadosolicitudId == 
+                    .Where(e => e.EstadosolicitudId ==
                     (int)enumEstados.aproboDirectorRRHH || e.EstadosolicitudId == (int)enumEstados.DenegoDirector)
                     .ToListAsync();
 
@@ -349,7 +357,7 @@ namespace ProyectoFinal_PG.Servicios
         {
             int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
             var empleado = await BuscarEmpleadoporCodigo(empleadoId);
-            
+
 
             switch (empleado.Cargo.CargoNombre)
             {
@@ -362,10 +370,11 @@ namespace ProyectoFinal_PG.Servicios
                     if (soli == null) return false;
 
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
-                    if(solicitud.EstadosolicitudId == (int)enumEstados.aproboJefeInmediato)
+                    if (solicitud.EstadosolicitudId == (int)enumEstados.aproboJefeInmediato)
                     {
-                        soli.SolicitudEstadoSeleJefe = "Aprobada "+empleado.EmpleadoNombre1+" "+empleado.EmpleadoApellido1;
-                    }else if(solicitud.EstadosolicitudId == (int)enumEstados.DenegoJefeInmediato)
+                        soli.SolicitudEstadoSeleJefe = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
+                    }
+                    else if (solicitud.EstadosolicitudId == (int)enumEstados.DenegoJefeInmediato)
                     {
                         soli.SolicitudEstadoSeleJefe = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
@@ -374,8 +383,8 @@ namespace ProyectoFinal_PG.Servicios
                     return true;
 
                 case "Director":
-                     soli = await db_context.TbSolicitudes.
-                                                    Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
+                    soli = await db_context.TbSolicitudes.
+                                                   Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
                     if (soli == null) return false;
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if (solicitud.EstadosolicitudId == (int)enumEstados.aproboDirector)
@@ -389,13 +398,13 @@ namespace ProyectoFinal_PG.Servicios
                     await db_context.SaveChangesAsync();
                     return true;
                 case "Director RRHH":
-                     soli = await db_context.TbSolicitudes.
-                                  Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
+                    soli = await db_context.TbSolicitudes.
+                                 Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
                     if (soli == null) return false;
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if (solicitud.EstadosolicitudId == (int)enumEstados.aproboDirectorRRHH)
                     {
-                        if(soli.SolicitudPeriodoVacas == null)
+                        if (soli.SolicitudPeriodoVacas == null)
                         {
                             soli.SolicitudEstadoRrHh = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                             await db_context.SaveChangesAsync();
@@ -429,19 +438,19 @@ namespace ProyectoFinal_PG.Servicios
             return periodo;
         }
 
-        public async Task<bool> ActualizarDatos(ActualizaDatos actualizaDatos,int empleadoId)
+        public async Task<bool> ActualizarDatos(ActualizaDatos actualizaDatos, int empleadoId)
         {
 
             var empleado = await BuscarEmpleadoporCodigo(empleadoId);
-            if(actualizaDatos.EmpleadoTelefono != null)
+            if (actualizaDatos.EmpleadoTelefono != null)
             {
                 empleado.EmpleadoTelefono = actualizaDatos.EmpleadoTelefono;
             }
-            if(actualizaDatos.EmpleadoDireccion!= null)
+            if (actualizaDatos.EmpleadoDireccion != null)
             {
                 empleado.EmpleadoDireccion = actualizaDatos.EmpleadoDireccion;
             }
-            
+
             await db_context.SaveChangesAsync();
             return true;
         }
@@ -449,8 +458,8 @@ namespace ProyectoFinal_PG.Servicios
         public async Task<bool> InsertarDepartamento(AgregarDepartamentos agregarDepartamentos)
         {
             var depa = new TbDepartamentosLaborales();
-            
-            if(agregarDepartamentos != null)
+
+            if (agregarDepartamentos != null)
             {
                 depa.DeptoNombre = agregarDepartamentos.Departamento;
                 depa.DeptoDescripcion = agregarDepartamentos.Descripcion;
@@ -483,7 +492,7 @@ namespace ProyectoFinal_PG.Servicios
         public async Task<bool> InsertarCargos(AgregarCargosViewModel agregarCargos)
         {
             var modelo = new TbCargos();
-            if(agregarCargos.CargoNombreView != null)
+            if (agregarCargos.CargoNombreView != null)
             {
                 modelo.CargoNombre = agregarCargos.CargoNombreView;
                 modelo.CargoDescripcion = agregarCargos.CargoDescripcionView;
@@ -508,7 +517,7 @@ namespace ProyectoFinal_PG.Servicios
 
             };
 
-            if(agregarPeriodos.periodo_vacacionalView != null)
+            if (agregarPeriodos.periodo_vacacionalView != null)
             {
                 db_context.Add(modelo);
                 await db_context.SaveChangesAsync();

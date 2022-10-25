@@ -202,3 +202,7 @@ table td, thead, th{
 .enlace{
     color:var(--amarillo)
 }
+
+.actualizarDatos{
+    color:var(--extra) !important;
+}

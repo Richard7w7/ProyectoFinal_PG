@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ProyectoFinal_PG.Models;
 using ProyectoFinal_PG.Servicios;
 using Syncfusion.Pdf.Parsing;
+using System.Globalization;
 
 namespace ProyectoFinal_PG.Controllers
 {
@@ -367,72 +368,82 @@ namespace ProyectoFinal_PG.Controllers
         //Crear archivo
         public async Task<IActionResult> GenerarTemplatePDF(int id)
         {
-            var modelo = new EmpleadoPeriodoViewModel();
-            int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
-            var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
-            int idemp = (int)empleado.EmpleadoId;
-            var tbsolicitudes = await serviciosSolicitudes.ObtenerSolicitudDetalle(id,idemp);
-            
-            FileStream pdfStream = new FileStream(@"wwwroot\Template\Template.pdf", FileMode.Open, FileAccess.Read);
-            PdfLoadedDocument cargaDoc = new PdfLoadedDocument(pdfStream);
-            PdfLoadedForm formuPdf = cargaDoc.Form;
+            try
+            {
+                var modelo = new EmpleadoPeriodoViewModel();
+                int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
+                var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
+                int idemp = (int)empleado.EmpleadoId;
+                var tbsolicitudes = await serviciosSolicitudes.ObtenerSolicitudDetalle(id, idemp);
 
-            (formuPdf.Fields["txtFecha"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudFecha.ToShortDateString();
-            (formuPdf.Fields["txttipoSoli"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Tiposolicitud.TiposolicitudNombre;
-            (formuPdf.Fields["txtCodigoEmpleado"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoCodigo;
-            (formuPdf.Fields["txtNombre"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoNombre1 + " " + tbsolicitudes.Empleado.EmpleadoApellido1;
-            (formuPdf.Fields["txtDireccion"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Depto.DeptoNombre;
-            (formuPdf.Fields["txtPuesto"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Cargo.CargoNombre;
-            (formuPdf.Fields["txtInicioLaboral"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.FechaIngresoLaboral.ToLongDateString();
-            (formuPdf.Fields["txtCantiDias"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudCantidadDias.ToString();
-            if(tbsolicitudes.SolicitudPeriodoVacas == null)
-            {
-                (formuPdf.Fields["txtCorrespondePeriodo"] as PdfLoadedTextBoxField).Text = "";
-            }
-            else
-            {
-                (formuPdf.Fields["txtCorrespondePeriodo"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudPeriodoVacas;
-            }
-            string[] arrayfechas = tbsolicitudes.SolicitudFechasSeleccionadas.Split(',');
-            (formuPdf.Fields["txtInicioVacas"] as PdfLoadedTextBoxField).Text = arrayfechas[0];
-            (formuPdf.Fields["txtFinVacas"] as PdfLoadedTextBoxField).Text = arrayfechas.Last();
-            var inicioLaboral = Convert.ToDateTime(arrayfechas.Last());
-            inicioLaboral = inicioLaboral.AddDays(1);
-            (formuPdf.Fields["txtRegresoLaboral"] as PdfLoadedTextBoxField).Text = inicioLaboral.ToShortDateString();
-            if (tbsolicitudes.SolicitudComentario== null)
-            {
-                (formuPdf.Fields["txtComentario"] as PdfLoadedTextBoxField).Text = "";
-            }
-            else
-            {
-                (formuPdf.Fields["txtComentario"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudComentario;
-            }
-            
+                FileStream pdfStream = new FileStream(@"wwwroot\Template\Template.pdf", FileMode.Open, FileAccess.Read);
+                //FileStream pdfStream = new FileStream(@"wwwroot/Template/Template.pdf", FileMode.Open, FileAccess.Read);
+                PdfLoadedDocument cargaDoc = new PdfLoadedDocument(pdfStream);
+                PdfLoadedForm formuPdf = cargaDoc.Form;
+
+                (formuPdf.Fields["txtFecha"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudFecha.ToShortDateString();
+                (formuPdf.Fields["txttipoSoli"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Tiposolicitud.TiposolicitudNombre;
+                (formuPdf.Fields["txtCodigoEmpleado"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoCodigo;
+                (formuPdf.Fields["txtNombre"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoNombre1 + " " + tbsolicitudes.Empleado.EmpleadoApellido1;
+                (formuPdf.Fields["txtDireccion"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Depto.DeptoNombre;
+                (formuPdf.Fields["txtPuesto"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Cargo.CargoNombre;
+                (formuPdf.Fields["txtInicioLaboral"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.FechaIngresoLaboral.ToLongDateString();
+                (formuPdf.Fields["txtCantiDias"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudCantidadDias.ToString();
+                if (tbsolicitudes.SolicitudPeriodoVacas == null)
+                {
+                    (formuPdf.Fields["txtCorrespondePeriodo"] as PdfLoadedTextBoxField).Text = "";
+                }
+                else
+                {
+                    (formuPdf.Fields["txtCorrespondePeriodo"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudPeriodoVacas;
+                }
+                string[] arrayfechas = tbsolicitudes.SolicitudFechasSeleccionadas.Split(',');
+                (formuPdf.Fields["txtInicioVacas"] as PdfLoadedTextBoxField).Text = arrayfechas[0];
+                (formuPdf.Fields["txtFinVacas"] as PdfLoadedTextBoxField).Text = arrayfechas.Last();
+                var inicioLaboral = Convert.ToDateTime(arrayfechas.Last());
+                inicioLaboral = inicioLaboral.AddDays(1);
+                (formuPdf.Fields["txtRegresoLaboral"] as PdfLoadedTextBoxField).Text = inicioLaboral.ToShortDateString();
+                if (tbsolicitudes.SolicitudComentario == null)
+                {
+                    (formuPdf.Fields["txtComentario"] as PdfLoadedTextBoxField).Text = "";
+                }
+                else
+                {
+                    (formuPdf.Fields["txtComentario"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudComentario;
+                }
+
             (formuPdf.Fields["txtdetalles"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudDetalles;
-            string[] arrayEstadoRRHH = tbsolicitudes.SolicitudEstadoRrHh.Split(' ');
-            (formuPdf.Fields["txtEstado"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[0];
-            (formuPdf.Fields["txtNotificado1"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoNombre1 + " " + tbsolicitudes.Empleado.EmpleadoApellido1; ;
-            (formuPdf.Fields["txtNotificado2"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Cargo.CargoNombre;
-            string[] arrayEstadoJefe = tbsolicitudes.SolicitudEstadoSeleJefe.Split(' ');
-            (formuPdf.Fields["txtEstadoJefeInmediato"] as PdfLoadedTextBoxField).Text = arrayEstadoJefe[0];  
-            (formuPdf.Fields["txtNombreJefeInmediato"] as PdfLoadedTextBoxField).Text = arrayEstadoJefe[1]+" "+ arrayEstadoJefe[2];
-            (formuPdf.Fields["txtPuestoJefeInmediato"] as PdfLoadedTextBoxField).Text = "Jefe Inmediato de "+ tbsolicitudes.Empleado.Depto.DeptoNombre;
-            string[] arrayEstadoDirector = tbsolicitudes.SolicitudEstadoDirector.Split(' ');
-            (formuPdf.Fields["txtEstadoDirector"] as PdfLoadedTextBoxField).Text = arrayEstadoDirector[0];
-            (formuPdf.Fields["txtNombreDirector"] as PdfLoadedTextBoxField).Text = arrayEstadoDirector[1]+" "+ arrayEstadoDirector[2];
-            (formuPdf.Fields["txtPuestoDirector"] as PdfLoadedTextBoxField).Text = "Director de "+ tbsolicitudes.Empleado.Depto.DeptoNombre;
+                string[] arrayEstadoRRHH = tbsolicitudes.SolicitudEstadoRrHh.Split(' ');
+                (formuPdf.Fields["txtEstado"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[0];
+                (formuPdf.Fields["txtNotificado1"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoNombre1 + " " + tbsolicitudes.Empleado.EmpleadoApellido1; ;
+                (formuPdf.Fields["txtNotificado2"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Cargo.CargoNombre;
+                string[] arrayEstadoJefe = tbsolicitudes.SolicitudEstadoSeleJefe.Split(' ');
+                (formuPdf.Fields["txtEstadoJefeInmediato"] as PdfLoadedTextBoxField).Text = arrayEstadoJefe[0];
+                (formuPdf.Fields["txtNombreJefeInmediato"] as PdfLoadedTextBoxField).Text = arrayEstadoJefe[1] + " " + arrayEstadoJefe[2];
+                (formuPdf.Fields["txtPuestoJefeInmediato"] as PdfLoadedTextBoxField).Text = "Jefe Inmediato de " + tbsolicitudes.Empleado.Depto.DeptoNombre;
+                string[] arrayEstadoDirector = tbsolicitudes.SolicitudEstadoDirector.Split(' ');
+                (formuPdf.Fields["txtEstadoDirector"] as PdfLoadedTextBoxField).Text = arrayEstadoDirector[0];
+                (formuPdf.Fields["txtNombreDirector"] as PdfLoadedTextBoxField).Text = arrayEstadoDirector[1] + " " + arrayEstadoDirector[2];
+                (formuPdf.Fields["txtPuestoDirector"] as PdfLoadedTextBoxField).Text = "Director de " + tbsolicitudes.Empleado.Depto.DeptoNombre;
+
+                (formuPdf.Fields["txtestadoRRHH"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[0];
+                (formuPdf.Fields["txtNombreRRHH"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[1] + " " + arrayEstadoRRHH[2];
+
+                MemoryStream stream = new MemoryStream();
+                cargaDoc.Save(stream);
+                stream.Position = 0;
+                cargaDoc.Close(true);
+                string contentType = "application/pdf";
+                string fileName = "Solicitud #" + tbsolicitudes.SolicitudId + " " + tbsolicitudes.Empleado.Depto.DeptoNombre + " " + tbsolicitudes.Empleado.EmpleadoCodigo + ".pdf";
+
+                return File(stream, contentType, fileName);
+            }
+            catch (Exception e)
+            {
+
+                return NotFound(e);
+            }
             
-            (formuPdf.Fields["txtestadoRRHH"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[0];
-            (formuPdf.Fields["txtNombreRRHH"] as PdfLoadedTextBoxField).Text = arrayEstadoRRHH[1] +" "+ arrayEstadoRRHH[2];
-
-            MemoryStream stream = new MemoryStream();
-            cargaDoc.Save(stream);
-            stream.Position = 0;
-            cargaDoc.Close(true);
-            string contentType = "application/pdf";
-            string fileName = "Solicitud #"+tbsolicitudes.SolicitudId+" "+tbsolicitudes.Empleado.Depto.DeptoNombre+" "+tbsolicitudes.Empleado.EmpleadoCodigo+".pdf";
-
-            return File(stream, contentType, fileName);
         }
 
        
