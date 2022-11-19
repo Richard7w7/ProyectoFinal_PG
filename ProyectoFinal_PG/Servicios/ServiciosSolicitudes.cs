@@ -312,6 +312,7 @@ namespace ProyectoFinal_PG.Servicios
                        .Include(soli => soli.Tiposolicitud)
                        .Include(soli => soli.Estadosolicitud)
                        .Include(soli => soli.Periodo)
+                       .Include(soli => soli.Empleado.Depto)
                        .Where(soli => soli.SolicitudId == id)
                        .FirstOrDefaultAsync();
             return solicitud;
@@ -379,6 +380,14 @@ namespace ProyectoFinal_PG.Servicios
                         soli.SolicitudEstadoSeleJefe = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
 
+                    if(solicitud.SolicitudComentario != null)
+                    {
+                        soli.SolicitudComentario = solicitud.SolicitudComentario;
+                    }
+                    else
+                    {
+                        soli.SolicitudComentario = null;
+                    }
                     await db_context.SaveChangesAsync();
                     return true;
 
@@ -395,18 +404,35 @@ namespace ProyectoFinal_PG.Servicios
                     {
                         soli.SolicitudEstadoDirector = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                     }
+                    if (solicitud.SolicitudComentario != null)
+                    {
+                        soli.SolicitudComentario = solicitud.SolicitudComentario;
+                    }
+                    else
+                    {
+                        soli.SolicitudComentario = null;
+                    }
                     await db_context.SaveChangesAsync();
                     return true;
                 case "Director RRHH":
-                    soli = await db_context.TbSolicitudes.
-                                 Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
+                    soli = await db_context.TbSolicitudes
+                        
+                        .Where(t => t.SolicitudId == solicitud.SolicitudId).FirstOrDefaultAsync();
                     if (soli == null) return false;
                     soli.EstadosolicitudId = solicitud.EstadosolicitudId;
                     if (solicitud.EstadosolicitudId == (int)enumEstados.aproboDirectorRRHH)
                     {
-                        if (soli.SolicitudPeriodoVacas == null)
+                        if (soli.SolicitudPeriodoVacas == "Ninguno")
                         {
                             soli.SolicitudEstadoRrHh = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
+                            if (solicitud.SolicitudComentario != null)
+                            {
+                                soli.SolicitudComentario = solicitud.SolicitudComentario;
+                            }
+                            else
+                            {
+                                soli.SolicitudComentario = null;
+                            }
                             await db_context.SaveChangesAsync();
                             return true;
                         }
@@ -415,6 +441,14 @@ namespace ProyectoFinal_PG.Servicios
                             soli.SolicitudEstadoRrHh = "Aprobada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
                             var periodo = await ObtenerPeriodoPorId((int)soli.PeriodoId);
                             periodo.PeriodoCantidadDiasPeriodo -= soli.SolicitudCantidadDias;
+                            if (solicitud.SolicitudComentario != null)
+                            {
+                                soli.SolicitudComentario = solicitud.SolicitudComentario;
+                            }
+                            else
+                            {
+                                soli.SolicitudComentario = null;
+                            }
                             await db_context.SaveChangesAsync();
                             return true;
                         }
@@ -423,6 +457,14 @@ namespace ProyectoFinal_PG.Servicios
                     else if (solicitud.EstadosolicitudId == (int)enumEstados.DenegoDirectorRRHH)
                     {
                         soli.SolicitudEstadoRrHh = "Denegada " + empleado.EmpleadoNombre1 + " " + empleado.EmpleadoApellido1;
+                    }
+                    if (solicitud.SolicitudComentario != null)
+                    {
+                        soli.SolicitudComentario = solicitud.SolicitudComentario;
+                    }
+                    else
+                    {
+                        soli.SolicitudComentario = null;
                     }
                     await db_context.SaveChangesAsync();
                     return true;

@@ -156,6 +156,19 @@ namespace ProyectoFinal_PG.Controllers
                 ViewBag.Solicitud = "SinPeriodo";
                 return View();
             }
+            if(modelo.TiposolicitudId == (int)EnumtipoSolicitud.Licencia || modelo.TiposolicitudId == (int)EnumtipoSolicitud.Permiso)
+            {
+                ViewBag.Periodo = cantidadDiasVacacionales.Periodo;
+                ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+                modelo.solicitud_depto_Id = empleado.DeptoId;
+                var idsoli = await serviciosSolicitudes.CrearSolicitud(modelo);
+                ViewBag.Periodo = cantidadDiasVacacionales.Periodo;
+                ViewBag.Dias = cantidadDiasVacacionales.cantidad_dias;
+                ViewBag.Solicitud = "creada";
+
+                return RedirectToAction("ListadeSolicitudes");
+
+            }
             if ( dias > diaslimites)
             {
                 
@@ -206,10 +219,10 @@ namespace ProyectoFinal_PG.Controllers
         }
 
         [HttpPost]
-        public IActionResult ModificarSolicitud(EmpleadoSolicitudesViewModel modelo)
+        public async Task<IActionResult> ModificarSolicitudAsync(EmpleadoSolicitudesViewModel modelo)
         {
             var solicitud = modelo.SolicitudesViewModelDetalle;
-            var seModifico = serviciosSolicitudes.ModificarEstadoSolicitud(solicitud).Result;
+            var seModifico = await serviciosSolicitudes.ModificarEstadoSolicitud(solicitud);
             if(!seModifico) { return NotFound(); }
             return RedirectToAction("ListarSolicitudesDepartamento");
             
@@ -368,16 +381,15 @@ namespace ProyectoFinal_PG.Controllers
         //Crear archivo
         public async Task<IActionResult> GenerarTemplatePDF(int id)
         {
-            try
-            {
+           
                 var modelo = new EmpleadoPeriodoViewModel();
                 int empleadoId = servicioEmpleados.ObtenerEmpleadoId();
                 var empleado = await serviciosSolicitudes.BuscarEmpleadoporCodigo(empleadoId);
                 int idemp = (int)empleado.EmpleadoId;
                 var tbsolicitudes = await serviciosSolicitudes.ObtenerSolicitudDetalle(id, idemp);
 
-                FileStream pdfStream = new FileStream(@"wwwroot\Template\Template.pdf", FileMode.Open, FileAccess.Read);
-                //FileStream pdfStream = new FileStream(@"wwwroot/Template/Template.pdf", FileMode.Open, FileAccess.Read);
+                //FileStream pdfStream = new FileStream(@"wwwroot\Template\Template.pdf", FileMode.Open, FileAccess.Read);
+                FileStream pdfStream = new FileStream(@"wwwroot/Template/Template.pdf", FileMode.Open, FileAccess.Read);
                 PdfLoadedDocument cargaDoc = new PdfLoadedDocument(pdfStream);
                 PdfLoadedForm formuPdf = cargaDoc.Form;
 
@@ -387,7 +399,7 @@ namespace ProyectoFinal_PG.Controllers
                 (formuPdf.Fields["txtNombre"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.EmpleadoNombre1 + " " + tbsolicitudes.Empleado.EmpleadoApellido1;
                 (formuPdf.Fields["txtDireccion"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Depto.DeptoNombre;
                 (formuPdf.Fields["txtPuesto"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.Cargo.CargoNombre;
-                (formuPdf.Fields["txtInicioLaboral"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.FechaIngresoLaboral.ToLongDateString();
+                (formuPdf.Fields["txtInicioLaboral"] as PdfLoadedTextBoxField).Text = tbsolicitudes.Empleado.FechaIngresoLaboral.ToShortDateString();
                 (formuPdf.Fields["txtCantiDias"] as PdfLoadedTextBoxField).Text = tbsolicitudes.SolicitudCantidadDias.ToString();
                 if (tbsolicitudes.SolicitudPeriodoVacas == null)
                 {
@@ -400,9 +412,12 @@ namespace ProyectoFinal_PG.Controllers
                 string[] arrayfechas = tbsolicitudes.SolicitudFechasSeleccionadas.Split(',');
                 (formuPdf.Fields["txtInicioVacas"] as PdfLoadedTextBoxField).Text = arrayfechas[0];
                 (formuPdf.Fields["txtFinVacas"] as PdfLoadedTextBoxField).Text = arrayfechas.Last();
-                var inicioLaboral = Convert.ToDateTime(arrayfechas.Last());
-                inicioLaboral = inicioLaboral.AddDays(1);
-                (formuPdf.Fields["txtRegresoLaboral"] as PdfLoadedTextBoxField).Text = inicioLaboral.ToShortDateString();
+                var inicioLaboral = arrayfechas.Last();
+            string[] fechas = inicioLaboral.Split("/");
+            int dia = int.Parse(fechas[0]);
+            dia += 1;
+            string fechafinal = dia +"/"+ fechas[1] + "/"+fechas[2];
+                (formuPdf.Fields["txtRegresoLaboral"] as PdfLoadedTextBoxField).Text = fechafinal;
                 if (tbsolicitudes.SolicitudComentario == null)
                 {
                     (formuPdf.Fields["txtComentario"] as PdfLoadedTextBoxField).Text = "";
@@ -437,12 +452,7 @@ namespace ProyectoFinal_PG.Controllers
                 string fileName = "Solicitud #" + tbsolicitudes.SolicitudId + " " + tbsolicitudes.Empleado.Depto.DeptoNombre + " " + tbsolicitudes.Empleado.EmpleadoCodigo + ".pdf";
 
                 return File(stream, contentType, fileName);
-            }
-            catch (Exception e)
-            {
-
-                return NotFound(e);
-            }
+            
             
         }
 
